@@ -15,8 +15,6 @@ func CallLLM(prompt string) (string, error) {
 		return "", err
 	}
 
-	llms.GenerateFromSinglePrompt(ctx, llm, prompt)
-
 	completion, err := llms.GenerateFromSinglePrompt(ctx, llm, prompt)
 	if err != nil {
 		return "", err
