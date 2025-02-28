@@ -12,7 +12,7 @@
   border: 2px dashed var(--main-color);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 40px 20px;
+  padding: 40px 70px;
   margin: 20px 0;
   width: 100%;
   display: flex;
@@ -55,6 +55,30 @@
   background-color: var(--main-color);
   /* 凹進去 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
+}
+
+.card .input-box {
+  display: flex;
+  gap: 10px;
+  justify-self: center;
+}
+
+.card .input-box label {
+  font-size: 1.4rem;
+  color: var(--main-color);
+}
+
+.card .input-box input {
+  width: 300px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1.5px solid var(--main-color);
+  border-radius: 10px;
+}
+
+.card .input-box input:focus {
+  outline: none;
+  border: 1.5px solid var(--main-hover-color);
 }
 
 footer {

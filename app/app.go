@@ -2,6 +2,7 @@ package app
 
 import (
 	"sync"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -12,6 +13,11 @@ var ResultBuf sync.Map
 type ReviewData struct {
 	StoreName string   `json:"store_name"`
 	Reviews   []string `json:"reviews"`
+	timeStamp int64
+}
+
+func (reviewData *ReviewData) SetTimeStamp() {
+	reviewData.timeStamp = time.Now().Unix()
 }
 
 func SaveToBuf(reviewData ReviewData) (dataUUID string) {
