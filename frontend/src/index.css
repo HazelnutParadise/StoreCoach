@@ -1,0 +1,17 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --main-background-color: #e2fcef;
+  --main-color: #087e8b;
+  --main-hover-color: #46237a;
+
+  /* #FF495C */
+  /* #358600 */
+}
+
+body {
+  margin: 0;
+  background-color: var(--main-background-color);
+}

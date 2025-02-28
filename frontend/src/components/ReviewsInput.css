@@ -1,0 +1,20 @@
+.Spreadsheet__table {
+  width: 100%; /* 設定表格的寬度 */
+  max-width: 100%; /* 限制表格的最大寬度 */
+  display: flex;
+  justify-content: center;
+  /* background-color: #e2fcef; */
+}
+
+.Spreadsheet__header {
+  color: white !important; /* 設定標題文字的顏色 */
+  background-color: var(--main-color) !important; /* 設定標題的背景顏色 */
+  font-size: 1.2rem !important; /* 設定標題文字的大小 */
+}
+
+.Spreadsheet__cell {
+  width: 1000px; /* 設定儲存格的寬度 */
+  max-width: 1000px; /* 限制儲存格的最大寬度 */
+  height: 2rem; /* 設定儲存格的高度 */
+  box-sizing: border-box; /* 確保 padding 和 border 不會影響元素的最終寬度 */
+}
