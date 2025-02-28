@@ -29,13 +29,14 @@ const SpreadsheetInput = forwardRef((props, ref) => {
   };
 
   return (
-    <Spreadsheet
-      data={data}
-      onChange={handleChange}
-      hideRowIndicators={true}
-      columnLabels={columnLabels}
-      className="spreadsheet"
-    />
+    <div className="reviews-input">
+      <Spreadsheet
+        data={data}
+        onChange={handleChange}
+        hideRowIndicators={true}
+        columnLabels={columnLabels}
+      />
+    </div>
   );
 });
 
