@@ -8,11 +8,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
-	err := godotenv.Load()
+func init() {
+	err := godotenv.Load("StoreCoach.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+}
+
+func main() {
 	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	routes.SetRoutes(r)
