@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import TopBar from "./components/TopBar";
 import ReviewsInput from "./components/ReviewsInput";
@@ -16,9 +16,17 @@ const App = () => {
 
   // 取得表格數據（會自動忽略空白列）
   const handleStartReviewMining = () => {
+    if (!storeName) {
+      alert("請輸入商店名稱");
+      return;
+    }
     if (spreadsheetRef.current) {
       const reviews = spreadsheetRef.current.getData();
       console.log("表格資料:", reviews);
+      if (reviews.length === 0) {
+        alert("請輸入評論內容");
+        return;
+      }
       axios
         .post("/api/review-mining", {
           store_name: storeName,
