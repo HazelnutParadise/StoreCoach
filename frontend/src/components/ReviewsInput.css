@@ -15,7 +15,7 @@
   text-align: start !important; /* 設定標題文字的對齊方式 */
   color: white !important; /* 設定標題文字的顏色 */
   background-color: var(--main-color) !important; /* 設定標題的背景顏色 */
-  font-size: 1.2rem !important; /* 設定標題文字的大小 */
+  font-size: clamp(1rem, 1.6vw, 1.2rem) !important; /* 設定標題文字的大小 */
 }
 
 .Spreadsheet__cell {
