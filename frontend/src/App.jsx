@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import TopBar from "./components/TopBar";
 import ReviewsInput from "./components/ReviewsInput";
@@ -39,34 +40,41 @@ const App = () => {
   };
 
   return (
-    <>
+    <Router>
       <TopBar />
-      <div className="container">
-        <div className="card">
-          <h2>AI 評論探勘</h2>
-          <br />
-          <div className="input-box">
-            <label htmlFor="store-name">商店名稱</label>
-            <input
-              type="text"
-              id="store-name"
-              value={storeName}
-              onChange={(e) => setStoreName(e.target.value)}
-            />
-          </div>
-          <br />
-          <ReviewsInput
-            ref={spreadsheetRef}
-            columnLabels={["輸入或貼上評論內容 (列數會自動擴張)："]}
-          />
-          <button onClick={handleStartReviewMining}>開始探勘</button>
-        </div>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="container">
+              <div className="card">
+                <h2>AI 評論探勘</h2>
+                <br />
+                <div className="input-box">
+                  <label htmlFor="store-name">商店名稱</label>
+                  <input
+                    type="text"
+                    id="store-name"
+                    value={storeName}
+                    onChange={(e) => setStoreName(e.target.value)}
+                  />
+                </div>
+                <br />
+                <ReviewsInput
+                  ref={spreadsheetRef}
+                  columnLabels={["輸入或貼上評論內容 (列數會自動擴張)："]}
+                />
+                <button onClick={handleStartReviewMining}>開始探勘</button>
+              </div>
+            </div>
+          }
+        />
+      </Routes>
       <footer>
         <div id="navbar-placeholder"></div>
         <div>{currentYear} © HazelnutParadise</div>
       </footer>
-    </>
+    </Router>
   );
 };
 
