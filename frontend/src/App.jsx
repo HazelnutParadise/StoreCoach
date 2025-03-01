@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import TopBar from "./components/TopBar";
 import ReviewsInput from "./components/ReviewsInput";
+import PageNotFound from "./pages/404";
 import "./App.css";
 
 const App = () => {
@@ -69,6 +70,7 @@ const App = () => {
             </div>
           }
         />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       <footer>
         <div id="navbar-placeholder"></div>
