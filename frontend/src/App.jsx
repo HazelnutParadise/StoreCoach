@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import axios from "axios";
 import TopBar from "./components/TopBar";
 import ReviewsInput from "./components/ReviewsInput";
@@ -7,6 +7,22 @@ import PageNotFound from "./pages/404";
 import "./App.css";
 
 const App = () => {
+  const [title, setTitle] = useState();
+  const location = useLocation();
+  const setPageTitle = (str) => {
+    const newTitle = str
+      ? str + " | StoreCoach 商店教練 - 榛果繽紛樂"
+      : "StoreCoach 商店教練 - 榛果繽紛樂";
+    setTitle(newTitle);
+  };
+  useEffect(() => {
+    setPageTitle();
+  }, [location]);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
   useEffect(() => {
     getNavbar();
   }, []);
@@ -41,7 +57,7 @@ const App = () => {
   };
 
   return (
-    <Router>
+    <>
       <TopBar />
       <Routes>
         <Route
@@ -70,13 +86,16 @@ const App = () => {
             </div>
           }
         />
-        <Route path="*" element={<PageNotFound />} />
+        <Route
+          path="*"
+          element={<PageNotFound setPageTitle={setPageTitle} />}
+        />
       </Routes>
       <footer>
         <div id="navbar-placeholder"></div>
         <div>{currentYear} © HazelnutParadise</div>
       </footer>
-    </Router>
+    </>
   );
 };
 
