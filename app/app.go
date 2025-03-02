@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"sync"
 	"time"
 
@@ -10,8 +11,7 @@ import (
 
 var json = jsoniter.ConfigFastest
 
-var DataBuf sync.Map
-var ResultBuf sync.Map
+var ReviewMiningDataBuf sync.Map
 
 type ReviewData struct {
 	StoreName string   `json:"storeName"`
@@ -23,9 +23,22 @@ func (reviewData *ReviewData) SetTimeStamp() {
 	reviewData.timeStamp = time.Now().Unix()
 }
 
-func SaveToBuf(reviewData ReviewData) (dataUUID string) {
+func ReviewMining_SaveToBuf(reviewData ReviewData) (dataUUID string) {
 	dataUUID = uuid.New().String()
-	DataBuf.Store(dataUUID, reviewData)
+	reviewData.SetTimeStamp()
+	ReviewMiningDataBuf.Store(dataUUID, reviewData)
+	return
+}
+
+func HandleReviewMining(dataUUID string) (result []SingleReviewMiningResult, err error) {
+	reviewData, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
+	if !ok {
+		err = errors.New("data not found")
+		return
+	}
+	reviews := reviewData.(ReviewData).Reviews
+	storeName := reviewData.(ReviewData).StoreName
+	result, err = ReviewMining(storeName, reviews)
 	return
 }
 

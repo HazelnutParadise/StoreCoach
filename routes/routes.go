@@ -12,17 +12,39 @@ func SetRoutes(r *gin.Engine) {
 		// 取得 json 資料，給 uuid，存入 DataBuf
 		reviewData := app.ReviewData{}
 		c.BindJSON(&reviewData)
-		reviewData.SetTimeStamp()
-		dataUUID := app.SaveToBuf(reviewData)
+		dataUUID := app.ReviewMining_SaveToBuf(reviewData)
 		c.JSON(200, gin.H{
-			"data_uuid": dataUUID,
+			"dataUUID": dataUUID,
 		})
 	})
 
+	r.GET("/review-mining/:data_uuid", func(c *gin.Context) {
+		dataUUID := c.Param("data_uuid")
+		result, err := app.HandleReviewMining(dataUUID)
+		if err != nil {
+			if err.Error() == "data not found" {
+				c.JSON(404, gin.H{
+					"message": "Data not found",
+				})
+				return
+			}
+			c.JSON(500, gin.H{
+				"message": "Internal Server Error",
+			})
+		}
+		// todo: 之後做更多分析
+		c.JSON(200, result)
+	})
+
 	// TODO
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Hello, World!",
-		})
+	r.GET("/ChiayiCity.ttf", func(c *gin.Context) {
+		c.File("frontend/dist/ChiayiCity.ttf")
+	})
+	r.GET("/vite.svg", func(c *gin.Context) {
+		c.File("frontend/dist/vite.svg")
+	})
+	r.Static("/assets", "frontend/dist/assets")
+	r.NoRoute(func(c *gin.Context) {
+		c.File("frontend/dist/index.html")
 	})
 }
