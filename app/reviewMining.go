@@ -52,7 +52,7 @@ func generateAspectsFromReviews(storeName string, reviews []string) ([]string, e
 				"6. 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 				"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
-			resp, err := CallLLM(prompt)
+			resp, err := CallLLM(prompt, 0.1)
 			if err != nil {
 				return nil, err
 			}
@@ -83,7 +83,7 @@ func analyzeReview(storeName, review string, aspects []string) (*SingleReviewMin
 		"- 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 		"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
-	resp, err := CallLLM(prompt)
+	resp, err := CallLLM(prompt, 0.1)
 	if err != nil {
 		return nil, err
 	}
