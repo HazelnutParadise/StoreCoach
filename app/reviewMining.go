@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"math/rand"
-	"strings"
 )
 
 type SingleReviewMiningResult struct {
@@ -58,13 +57,9 @@ func generateAspectsFromReviews(storeName string, reviews []string) ([]string, e
 				return nil, err
 			}
 
-			// **去除 LLM 輸出中的 JSON 標記**
-			resp = strings.Replace(resp, "```json", "", -1)
-			resp = strings.Replace(resp, "```", "", -1)
-
 			resSlice := make([]string, 0)
 			// **解析 LLM 輸出**
-			err = json.Unmarshal([]byte(resp), &resSlice)
+			err = Unmarshal_LLM_JSON_Response(resp, &resSlice)
 			if err != nil {
 				return nil, err
 			}
@@ -93,12 +88,8 @@ func analyzeReview(storeName, review string, aspects []string) (*SingleReviewMin
 		return nil, err
 	}
 
-	// **去除 LLM 輸出中的 JSON 標記**
-	resp = strings.Replace(resp, "```json", "", -1)
-	resp = strings.Replace(resp, "```", "", -1)
-
 	var analysisResp = SingleReviewMiningResult{}
-	err = json.Unmarshal([]byte(resp), &analysisResp.MiningResult)
+	err = Unmarshal_LLM_JSON_Response(resp, &analysisResp.MiningResult)
 	if err != nil {
 		return nil, err
 	}

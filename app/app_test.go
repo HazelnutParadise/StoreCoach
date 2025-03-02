@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -58,9 +59,10 @@ func TestReviewMining(t *testing.T) {
 	}
 
 	got, err := ReviewMining(storeName, reviews)
-	t.Log(got)
+	for _, v := range got {
+		print(fmt.Sprint(v), "\n")
+	}
 	if err != nil {
 		t.Errorf("ReviewMining(%v) error: %v", reviews, err)
 	}
-	t.Log(got)
 }
