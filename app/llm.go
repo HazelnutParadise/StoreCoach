@@ -10,7 +10,7 @@ import (
 
 func CallLLM(prompt string) (string, error) {
 	ctx := context.Background()
-	llm, err := googleai.New(ctx, googleai.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
+	llm, err := googleai.New(ctx, googleai.WithAPIKey(os.Getenv("GEMINI_API_KEY")), googleai.WithDefaultModel("gemini-2.0-flash"))
 	if err != nil {
 		return "", err
 	}

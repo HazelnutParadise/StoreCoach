@@ -47,8 +47,8 @@ const App = () => {
       }
       axios
         .post("/api/review-mining", {
-          store_name: storeName,
-          reviews: reviews,
+          storeName,
+          reviews,
         })
         .then((res) => {
           console.log("uuid:", res.data);
