@@ -1,6 +1,7 @@
 @font-face {
   font-family: "CustomFont";
-  src: url("/ChiayiCity.ttf") format("truetype");
+  src: url("https://src.hazelnut-paradise.com/ChiayiCity.ttf")
+    format("truetype");
 }
 
 * {

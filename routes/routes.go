@@ -37,9 +37,6 @@ func SetRoutes(r *gin.Engine) {
 	})
 
 	// TODO
-	r.GET("/ChiayiCity.ttf", func(c *gin.Context) {
-		c.File("frontend/dist/ChiayiCity.ttf")
-	})
 	r.GET("/vite.svg", func(c *gin.Context) {
 		c.File("frontend/dist/vite.svg")
 	})
