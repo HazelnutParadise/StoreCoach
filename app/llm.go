@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	llmRequestInterval time.Duration = 200 * time.Millisecond
+	llmRequestInterval time.Duration = 500 * time.Millisecond
 )
 
 var llmReqBuf = sync.Map{}

@@ -86,6 +86,7 @@ const App = () => {
             </div>
           }
         />
+        <Route path="/review-mining/:uuid" element={<div>Review Mining</div>} />
         <Route
           path="*"
           element={<PageNotFound setPageTitle={setPageTitle} />}

@@ -2,6 +2,7 @@ package app
 
 import (
 	"math/rand"
+	"time"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
 )
@@ -11,6 +12,7 @@ type ReviewMiningStruct struct {
 	Attributes []string                   `json:"attributes"`
 	Results    []singleReviewMiningResult `json:"results"`
 	Summary    string                     `json:"summary"`
+	Timestamp  int64                      `json:"timestamp"`
 }
 
 type singleReviewMiningResult struct {
@@ -50,6 +52,9 @@ func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *R
 	if err != nil {
 		return nil, err
 	}
+
+	// **添加時間戳**
+	reviewMiningStruct.Timestamp = time.Now().Unix()
 
 	reviewMiningResultInfo = &reviewMiningStruct
 	return reviewMiningResultInfo, nil

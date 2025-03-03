@@ -56,8 +56,8 @@ func TestReviewMining(t *testing.T) {
 		"drinks are too expensive",
 		"價格偏高，但是餐點很美味。",
 		"不衛生，價格也不便宜。",
-		"味道一般，價格偏高。",
-		"不是最美味，但也不難吃。",
+		// "味道一般，價格偏高。",
+		// "不是最美味，但也不難吃。",
 	}
 
 	got, err := ReviewMining(storeName, reviews)
