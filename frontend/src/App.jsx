@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TopBar from "./components/TopBar";
 import ReviewsInput from "./components/ReviewsInput";
+import ReviewMiningResult from "./pages/ReviewMiningResult";
 import PageNotFound from "./pages/404";
 import "./App.css";
 
 const App = () => {
   const [title, setTitle] = useState();
   const location = useLocation();
+  const navigate = useNavigate();
   const setPageTitle = (str) => {
     const newTitle = str
       ? str + " | StoreCoach 商店教練 - 榛果繽紛樂"
@@ -51,7 +53,9 @@ const App = () => {
           reviews,
         })
         .then((res) => {
-          console.log("uuid:", res.data);
+          const uuid = res.data.dataUUID;
+          console.log("data_uuid:", uuid);
+          navigate(`/review-mining/${uuid}`);
         });
     }
   };
@@ -86,7 +90,10 @@ const App = () => {
             </div>
           }
         />
-        <Route path="/review-mining/:uuid" element={<div>Review Mining</div>} />
+        <Route
+          path="/review-mining/:dataUUID"
+          element={<ReviewMiningResult />}
+        />
         <Route
           path="*"
           element={<PageNotFound setPageTitle={setPageTitle} />}
