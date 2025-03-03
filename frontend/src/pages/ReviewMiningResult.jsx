@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FullScreenLoader from "../components/FullScreenLoader";
 import PageNotFound from "./404";
+import "./ReviewMiningResult.css";
 
 const ReviewMiningResult = () => {
   const { dataUUID } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState();
   const [result, setResult] = useState();
   const [error, setError] = useState();
@@ -43,10 +44,19 @@ const ReviewMiningResult = () => {
     return <PageNotFound />;
   } else if (result) {
     return (
-      <div className="container">
-        <h1>Review Mining Result</h1>
-        <p>UUID: {dataUUID}</p>
-        <h2>{result.storeName}</h2>
+      // < className="container">
+      //   <h1>Review Mining Result</h1>
+      //   <p>UUID: {dataUUID}</p>
+
+      <div class="parent">
+        <div class="div1">
+          <h2>商店名稱</h2>
+          <span>{result.storeName}</span>
+        </div>
+        <div class="div2">時間 </div>
+        <div class="div3"> uuu</div>
+        <div class="div4"> jjj</div>
+        <div class="div5"> kkk</div>
       </div>
     );
   }
