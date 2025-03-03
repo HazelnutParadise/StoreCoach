@@ -24,7 +24,7 @@ func Test_splitIntoChunks(t *testing.T) {
 	}
 }
 
-func Test_generateAspectsFromReviews(t *testing.T) {
+func Test_generateAttributesFromReviews(t *testing.T) {
 	godotenv.Load("../StoreCoach.env")
 	storeName := "好旺來餐廳"
 	reviews := []string{
@@ -37,7 +37,7 @@ func Test_generateAspectsFromReviews(t *testing.T) {
 		"不衛生，價格也不便宜。",
 	}
 
-	got, err := generateAspectsFromReviews(storeName, reviews)
+	got, err := generateAttributesFromReviews(storeName, reviews)
 	if err != nil {
 		t.Errorf("generateTopics(%v) error: %v", reviews, err)
 	}
@@ -56,6 +56,8 @@ func TestReviewMining(t *testing.T) {
 		"drinks are too expensive",
 		"價格偏高，但是餐點很美味。",
 		"不衛生，價格也不便宜。",
+		"味道一般，價格偏高。",
+		"不是最美味，但也不難吃。",
 	}
 
 	got, err := ReviewMining(storeName, reviews)
