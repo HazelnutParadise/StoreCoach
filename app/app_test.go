@@ -61,9 +61,10 @@ func TestReviewMining(t *testing.T) {
 	}
 
 	got, err := ReviewMining(storeName, reviews)
-	for _, v := range got {
-		print(fmt.Sprint(v), "\n")
-	}
+	print(fmt.Sprint(got), "\n")
+	// for _, v := range got.Results {
+	// 	print(fmt.Sprint(v), "\n")
+	// }
 	if err != nil {
 		t.Errorf("ReviewMining(%v) error: %v", reviews, err)
 	}

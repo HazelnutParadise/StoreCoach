@@ -19,6 +19,25 @@ type ReviewData struct {
 	timeStamp int64
 }
 
+func init() {
+	go func() {
+		for {
+			keysToDelete := []string{}
+			anHourAgo := time.Now().Add(-time.Hour).Unix()
+			ReviewMiningDataBuf.Range(func(key, value any) bool {
+				if value.(ReviewData).timeStamp < anHourAgo {
+					keysToDelete = append(keysToDelete, key.(string))
+				}
+				return true
+			})
+			for _, key := range keysToDelete {
+				ReviewMiningDataBuf.Delete(key)
+			}
+			time.Sleep(5 * time.Minute)
+		}
+	}()
+}
+
 func (reviewData *ReviewData) SetTimeStamp() {
 	reviewData.timeStamp = time.Now().Unix()
 }
@@ -30,16 +49,16 @@ func ReviewMining_SaveToBuf(reviewData ReviewData) (dataUUID string) {
 	return
 }
 
-func HandleReviewMining(dataUUID string) (result []SingleReviewMiningResult, err error) {
+func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error) {
 	reviewData, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
 	if !ok {
 		err = errors.New("data not found")
-		return
+		return nil, err
 	}
 	reviews := reviewData.(ReviewData).Reviews
 	storeName := reviewData.(ReviewData).StoreName
 	result, err = ReviewMining(storeName, reviews)
-	return
+	return result, err
 }
 
 func splitIntoChunks[T any](slice []T, length int) (chunks [][]T) {
