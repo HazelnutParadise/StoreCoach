@@ -17,8 +17,7 @@ func SetRoutes(r *gin.Engine) {
 			"dataUUID": dataUUID,
 		})
 	})
-
-	r.GET("/review-mining/:data_uuid", func(c *gin.Context) {
+	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
 		result, err := app.HandleReviewMining(dataUUID)
 		if err != nil {
@@ -32,7 +31,6 @@ func SetRoutes(r *gin.Engine) {
 				"message": "Internal Server Error",
 			})
 		}
-		// todo: 之後做更多分析
 		c.JSON(200, result)
 	})
 
