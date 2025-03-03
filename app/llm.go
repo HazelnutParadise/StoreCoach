@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	llmRequestLimitPer10Seconds int32 = 10
+	llmRequestInterval time.Duration = 200 * time.Millisecond
 )
 
 var llmReqBuf = sync.Map{}
@@ -27,17 +27,8 @@ type llmReq struct {
 
 func init() {
 	go func() {
-		var reqLimitLeft int32 = llmRequestLimitPer10Seconds
-		var lastReqTime int64
 		for {
-			if reqLimitLeft == 0 {
-				if time.Now().Unix()-lastReqTime > 10 {
-					reqLimitLeft = llmRequestLimitPer10Seconds
-				} else {
-					time.Sleep(500 * time.Millisecond)
-					continue
-				}
-			}
+			time.Sleep(llmRequestInterval)
 			var reqUUID string
 			var req llmReq
 			llmReqBuf.Range(func(key, val any) bool {
@@ -52,16 +43,12 @@ func init() {
 			if reqUUID == "" {
 				continue
 			}
-			lastReqTime = time.Now().Unix()
-			reqLimitLeft--
 			resp, err := requestLLM(req)
 			if err != nil {
 				llmErrBuf.Store(reqUUID, err)
 			} else {
 				llmRespBuf.Store(reqUUID, resp)
 			}
-
-			time.Sleep(200 * time.Millisecond)
 		}
 	}()
 }

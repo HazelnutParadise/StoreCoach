@@ -150,10 +150,10 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 	}{}
 	Unmarshal_LLM_JSON_Response(summary, &respStruct)
 	summary = respStruct.Overall + "\n" +
-		"主要優點：\n" + respStruct.Advantages + "\n" +
-		"主要缺點：\n" + respStruct.Disadvantages + "\n" +
-		"中性評價：\n" + respStruct.Neutral + "\n"
-	summary += "教練的建議：\n"
+		"\n主要優點：\n" + respStruct.Advantages + "\n" +
+		"\n主要缺點：\n" + respStruct.Disadvantages + "\n" +
+		"\n中性評價：\n" + respStruct.Neutral + "\n"
+	summary += "\n教練的建議：\n"
 	i := 1
 	for _, suggestion := range respStruct.Suggestions {
 		summary += conv.ToString(i) + ". " + suggestion.Title + "：" + suggestion.Content + "\n"
