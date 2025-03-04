@@ -22,4 +22,5 @@
   width: 1000px; /* 設定儲存格的寬度 */
   height: 2rem; /* 設定儲存格的高度 */
   box-sizing: border-box; /* 確保 padding 和 border 不會影響元素的最終寬度 */
+  font-family: sans-serif; /* 設定儲存格的字型 */
 }

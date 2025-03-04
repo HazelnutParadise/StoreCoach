@@ -280,17 +280,27 @@ const ReviewMiningResult = () => {
   } else if (result) {
     return (
       <div className="container">
-        <h1>評論探勘報告</h1>
-        <div className="info-box">
-          <h6>UUID: {dataUUID}</h6>
-          <h2>
-            商店名稱：<span>{result.storeName}</span>
-          </h2>
-          <h4>
-            分析時間：
-            {new Date(result.timestamp * 1000).toLocaleString("zh-TW")}
-          </h4>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+          }}
+        >
+          <h1 style={{ alignSelf: "start" }}>評論探勘報告 📊</h1>
+          <div className="info-box">
+            <h2>
+              商店名稱：<span>{result.storeName}</span>
+            </h2>
+            <h4>
+              分析時間：
+              {new Date(result.timestamp * 1000).toLocaleString("zh-TW")}
+            </h4>
+            <h6 className="uuid">UUID: {dataUUID}</h6>
+          </div>
         </div>
+
         <div className="report-box">
           <div className="chart-container">
             <div className="div1">
@@ -311,7 +321,7 @@ const ReviewMiningResult = () => {
             </div>
           </div>
           <div className="summary-box">
-            <h3 className="title">教練的小叮嚀</h3>
+            <h3 className="title">教練的小叮嚀 💪</h3>
             <div className="summary">
               <div className="chart-box card">
                 <p dangerouslySetInnerHTML={{ __html: rmSummary }}></p>

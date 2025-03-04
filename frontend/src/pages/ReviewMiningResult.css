@@ -12,7 +12,14 @@ h3 {
 }
 
 .info-box {
-  align-self: flex-start;
+  margin-left: auto;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.uuid {
+  max-width: 250px;
+  word-break: break-all;
 }
 
 .report-box {
