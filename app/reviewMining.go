@@ -17,10 +17,10 @@ type ReviewMiningStruct struct {
 
 type singleReviewMiningResult struct {
 	ReviewContent string `json:"reviewContent"`
-	MiningResult  []struct {
+	MiningResults []struct {
 		Attribute string `json:"attribute"`
 		Sentiment string `json:"sentiment"`
-	}
+	} `json:"miningResults"`
 }
 
 func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
@@ -125,7 +125,7 @@ func analyzeReview(storeName, review string, attributes []string) (*singleReview
 	}
 
 	var analysisResp = singleReviewMiningResult{}
-	err = Unmarshal_LLM_JSON_Response(resp, &analysisResp.MiningResult)
+	err = Unmarshal_LLM_JSON_Response(resp, &analysisResp.MiningResults)
 	if err != nil {
 		return nil, err
 	}
