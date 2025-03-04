@@ -33,7 +33,12 @@ const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
       },
     ],
   };
-  return <Doughnut data={data} />;
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h3>顧客在意的屬性</h3>
+      <Doughnut data={data} />
+    </div>
+  );
 };
 
 export default RmAttributesPieChart;
