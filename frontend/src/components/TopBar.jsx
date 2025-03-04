@@ -4,7 +4,7 @@ import "./TopBar.css";
 const TopBar = () => (
   <div className="top-bar">
     <img src={Logo} alt="logo" />
-    <h1>StoreCoach 商店教練</h1>
+    <h2 className="title">StoreCoach 商店教練</h2>
   </div>
 );
 

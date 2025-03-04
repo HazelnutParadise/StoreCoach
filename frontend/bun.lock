@@ -7,6 +7,7 @@
         "@nivo/pie": "^0.88.0",
         "axios": "^1.8.1",
         "chart.js": "^4.4.8",
+        "chartjs-plugin-datalabels": "^2.2.0",
         "react": "^19.0.0",
         "react-chartjs-2": "^5.3.0",
         "react-data-grid": "^7.0.0-beta.48",
@@ -295,6 +296,8 @@
     "chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "^4.1.0", "supports-color": "^7.1.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
 
     "chart.js": ["chart.js@4.4.8", "", { "dependencies": { "@kurkle/color": "^0.3.0" } }, "sha512-IkGZlVpXP+83QpMm4uxEiGqSI7jFizwVtF3+n5Pc3k7sMO+tkd0qxh2OzLhenM0K80xtmAONWGBn082EiBQSDA=="],
+
+    "chartjs-plugin-datalabels": ["chartjs-plugin-datalabels@2.2.0", "", { "peerDependencies": { "chart.js": ">=3.0.0" } }, "sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw=="],
 
     "chevrotain": ["chevrotain@7.1.2", "", { "dependencies": { "regexp-to-ast": "0.5.0" } }, "sha512-9bQsXVQ7UAvzMs7iUBBJ9Yv//exOy7bIR3PByOEk4M64vIE/LsiOiX7VIkMF/vEMlrSStwsaE884Bp9CpjtC5g=="],
 
