@@ -11,12 +11,12 @@ type ReviewMiningStruct struct {
 	StoreName   string                     `json:"storeName"`
 	ProductName string                     `json:"productName"`
 	Attributes  []string                   `json:"attributes"`
-	Results     []singleReviewMiningResult `json:"results"`
+	Results     []SingleReviewMiningResult `json:"results"`
 	Summary     string                     `json:"summary"`
 	Timestamp   int64                      `json:"timestamp"`
 }
 
-type singleReviewMiningResult struct {
+type SingleReviewMiningResult struct {
 	ReviewContent string `json:"reviewContent"`
 	MiningResults []struct {
 		Attribute string `json:"attribute"`
@@ -32,7 +32,7 @@ func ReviewMining(storeName string, productName string, reviews []string) (revie
 	}
 
 	// **分析評論**
-	var results []singleReviewMiningResult
+	var results []SingleReviewMiningResult
 	for _, review := range reviews {
 		result, err := analyzeReview(storeName, productName, review, attributes)
 		if err != nil {
@@ -113,7 +113,7 @@ func generateAttributesFromReviews(storeName string, productName string, reviews
 	return allAttributes, nil
 }
 
-func analyzeReview(storeName, productName string, review string, attributes []string) (*singleReviewMiningResult, error) {
+func analyzeReview(storeName, productName string, review string, attributes []string) (*SingleReviewMiningResult, error) {
 	sentimentClassification := [3]string{"positive", "negative", "neutral"}
 	beginningPrompt := "您是一位全球頂尖的資料探勘專家，正在分析「" + storeName + "」（一間商店或機構）"
 	if productName != "" {
@@ -133,7 +133,7 @@ func analyzeReview(storeName, productName string, review string, attributes []st
 		return nil, err
 	}
 
-	var analysisResp = singleReviewMiningResult{}
+	var analysisResp = SingleReviewMiningResult{}
 	err = Unmarshal_LLM_JSON_Response(resp, &analysisResp.MiningResults)
 	if err != nil {
 		return nil, err

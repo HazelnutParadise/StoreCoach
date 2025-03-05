@@ -2,6 +2,7 @@ package routes
 
 import (
 	"StoreCoach/app"
+	"StoreCoach/database"
 
 	"github.com/HazelnutParadise/Go-Utils/sliceutil"
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,14 @@ func SetRoutes(r *gin.Engine) {
 	})
 	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
-		result, err := app.HandleReviewMining(dataUUID)
+		result, _ := database.FindReviewMiningResult(dataUUID)
+		if result != nil {
+			c.JSON(200, result)
+			return
+		}
+		var err error
+		result, err = app.HandleReviewMining(dataUUID)
+		database.SaveReviewMiningResult(dataUUID, result)
 		if err != nil {
 			if err.Error() == "data not found" {
 				c.JSON(404, gin.H{
