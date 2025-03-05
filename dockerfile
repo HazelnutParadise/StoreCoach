@@ -1,7 +1,7 @@
 FROM oven/bun:latest AS bun
 WORKDIR /app
 COPY . .
-RUN cd frontend && bun install && bun run build
+RUN cd frontend && bun install --frozen-lockfile && bun run build
 
 FROM golang:1.23 AS build
 WORKDIR /app
