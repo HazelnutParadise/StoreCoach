@@ -4,8 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import FullScreenLoader from "../components/FullScreenLoader";
 import "./ReviewMiningResult.css";
 import RmAttributesPieChart from "../charts/RmAttributesPieChart";
+import RmAttributesBarChart from "../charts/RmAttributesBarChart";
 
-const ReviewMiningResult = () => {
+const ReviewMiningResult = ({ setPageTitle }) => {
   const { dataUUID } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState({
@@ -261,6 +262,11 @@ const ReviewMiningResult = () => {
   rmSummary = rmSummary.replace(/\n/g, "<br />");
 
   useEffect(() => {
+    if (isLoading) setPageTitle("載入中...");
+    else setPageTitle(`${rmStoreName}的評論探勘報告`);
+  }, [setPageTitle, isLoading]);
+
+  useEffect(() => {
     // todo: fetch data from backend
     // axios
     //   .get(`/api/review-mining/${dataUUID}`)
@@ -315,7 +321,7 @@ const ReviewMiningResult = () => {
             </div>
             <div className="div2">
               <div className="chart-box card">
-                <RmAttributesPieChart
+                <RmAttributesBarChart
                   rmAttributes={rmAttributes}
                   rmResults={rmResults}
                 />

@@ -1,6 +1,7 @@
 import { Doughnut } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Chart } from "chart.js";
+import ChartStyle from "./ChartStyle";
 
 Chart.register(ChartDataLabels);
 
@@ -79,17 +80,7 @@ const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-        width: "100%",
-        padding: "1rem",
-      }}
-    >
+    <div style={ChartStyle}>
       <h3>顧客在意的屬性</h3>
       <Doughnut data={data} options={options} width={"100%"} />
     </div>

@@ -107,7 +107,7 @@ const App = () => {
         />
         <Route
           path="/review-mining/:dataUUID"
-          element={<ReviewMiningResult />}
+          element={<ReviewMiningResult setPageTitle={setPageTitle} />}
         />
         <Route
           path="*"
