@@ -35,6 +35,13 @@ h3 {
   gap: 20px;
 }
 
+.chart-box {
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
 .div1 {
   width: calc(40% - 10px);
 }

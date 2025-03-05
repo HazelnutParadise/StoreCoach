@@ -33,17 +33,6 @@ const PageNotFound = (props) => {
         p {
           font-size: 1.1rem;
         }
-        .btn {
-          display: inline-block;
-          padding: 10px 20px;
-          background-color: var(--main-color);
-          color: white;
-          text-decoration: none;
-          border-radius: 5px;
-        }
-        .btn:hover {
-          background-color: var(--main-hover-color);
-        }
       `}</style>
     </>
   );

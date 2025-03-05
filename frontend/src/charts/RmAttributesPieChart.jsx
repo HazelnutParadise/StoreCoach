@@ -79,9 +79,19 @@ const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        width: "100%",
+        padding: "1rem",
+      }}
+    >
       <h3>顧客在意的屬性</h3>
-      <Doughnut data={data} options={options} />
+      <Doughnut data={data} options={options} width={"100%"} />
     </div>
   );
 };

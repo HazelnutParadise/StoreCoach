@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FullScreenLoader from "../components/FullScreenLoader";
 import "./ReviewMiningResult.css";
 import RmAttributesPieChart from "../charts/RmAttributesPieChart";
@@ -300,7 +300,9 @@ const ReviewMiningResult = () => {
             <h6 className="uuid">UUID: {dataUUID}</h6>
           </div>
         </div>
-
+        <Link to="/" className="btn back-btn">
+          回首頁
+        </Link>
         <div className="report-box">
           <div className="chart-container">
             <div className="div1">
@@ -312,7 +314,7 @@ const ReviewMiningResult = () => {
               </div>
             </div>
             <div className="div2">
-              <div className="card">
+              <div className="chart-box card">
                 <RmAttributesPieChart
                   rmAttributes={rmAttributes}
                   rmResults={rmResults}
@@ -323,7 +325,7 @@ const ReviewMiningResult = () => {
           <div className="summary-box">
             <h3 className="title">教練的小叮嚀 💪</h3>
             <div className="summary">
-              <div className="chart-box card">
+              <div className="card">
                 <p dangerouslySetInnerHTML={{ __html: rmSummary }}></p>
               </div>
             </div>
