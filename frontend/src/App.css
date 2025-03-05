@@ -8,6 +8,10 @@
   min-height: calc(min(100vh, 100dvh) - 50px - 50px);
 }
 
+.tips {
+  background-color: var(--tips-color) !important;
+}
+
 .card {
   background-color: var(--content-background-color);
   border: 2px dashed var(--main-color);
@@ -103,7 +107,6 @@ footer {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin-top: 10px;
   cursor: pointer;
   border-radius: 4px;
 }

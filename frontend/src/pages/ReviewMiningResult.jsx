@@ -306,13 +306,18 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             <h6 className="uuid">UUID: {dataUUID}</h6>
           </div>
         </div>
+        <div className="card rm-card tips">
+          <h3>Tips 💡</h3>
+          <h4>此頁面將永久存在，複製網址來分享您的分析！</h4>
+        </div>
         <Link to="/" className="btn back-btn">
           回首頁
         </Link>
+
         <div className="report-box">
           <div className="chart-container">
             <div className="div1">
-              <div className="chart-box card">
+              <div className="chart-box card rm-card">
                 <RmAttributesPieChart
                   rmAttributes={rmAttributes}
                   rmResults={rmResults}
@@ -320,7 +325,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               </div>
             </div>
             <div className="div2">
-              <div className="chart-box card">
+              <div className="chart-box card rm-card">
                 <RmAttributesBarChart
                   rmAttributes={rmAttributes}
                   rmResults={rmResults}
@@ -331,7 +336,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
           <div className="summary-box">
             <h3 className="title">教練的小叮嚀 💪</h3>
             <div className="summary">
-              <div className="card">
+              <div className="card rm-card">
                 <p dangerouslySetInnerHTML={{ __html: rmSummary }}></p>
               </div>
             </div>

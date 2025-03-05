@@ -3,7 +3,7 @@ h3 {
   padding: 0;
 }
 
-.card {
+.rm-card {
   padding: 20px 30px !important;
 }
 
@@ -44,11 +44,11 @@ h3 {
 }
 
 .div1 {
-  width: calc(40% - 10px);
+  width: calc(45% - 10px);
 }
 
 .div2 {
-  width: calc(60% - 10px);
+  width: calc(55% - 10px);
 }
 
 .summary-box {

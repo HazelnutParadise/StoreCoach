@@ -98,6 +98,9 @@ const App = () => {
           path="/"
           element={
             <div className="container">
+              <div className="tips card">
+                至 Github 查看原始碼：<a href=""></a>
+              </div>
               <div className="card">
                 <h2>AI 評論探勘</h2>
                 <br />
