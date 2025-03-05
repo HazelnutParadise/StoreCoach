@@ -1,13 +1,15 @@
 FROM oven/bun:latest AS bun
+WORKDIR /app
 COPY . .
 RUN cd frontend && bun install && bun build
 
 FROM golang:1.23 AS build
+WORKDIR /app
 COPY . .
-RUN go build -o /app
+RUN go build -o /main
 
 FROM scratch
-COPY --from=build /app /app
-COPY --from=bun /frontend/dist /frontend/dist
+COPY --from=build /app/main /main
+COPY --from=bun /app/frontend/dist /frontend/dist
 
-CMD ["/app"]
+CMD ["/main"]
