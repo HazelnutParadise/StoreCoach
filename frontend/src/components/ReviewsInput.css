@@ -9,6 +9,7 @@
   max-width: 100%; /* 限制表格的最大寬度 */
   display: flex;
   justify-content: center;
+  border: 1px solid var(--main-color); /* 設定表格的邊框 */
 }
 
 .Spreadsheet__header {

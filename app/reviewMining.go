@@ -8,11 +8,12 @@ import (
 )
 
 type ReviewMiningStruct struct {
-	StoreName  string                     `json:"storeName"`
-	Attributes []string                   `json:"attributes"`
-	Results    []singleReviewMiningResult `json:"results"`
-	Summary    string                     `json:"summary"`
-	Timestamp  int64                      `json:"timestamp"`
+	StoreName   string                     `json:"storeName"`
+	ProductName string                     `json:"productName"`
+	Attributes  []string                   `json:"attributes"`
+	Results     []singleReviewMiningResult `json:"results"`
+	Summary     string                     `json:"summary"`
+	Timestamp   int64                      `json:"timestamp"`
 }
 
 type singleReviewMiningResult struct {
@@ -23,9 +24,9 @@ type singleReviewMiningResult struct {
 	} `json:"miningResults"`
 }
 
-func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
+func ReviewMining(storeName string, productName string, reviews []string) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
 	// **將評論分塊並生成屬性**
-	attributes, err := generateAttributesFromReviews(storeName, reviews)
+	attributes, err := generateAttributesFromReviews(storeName, productName, reviews)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +34,7 @@ func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *R
 	// **分析評論**
 	var results []singleReviewMiningResult
 	for _, review := range reviews {
-		result, err := analyzeReview(storeName, review, attributes)
+		result, err := analyzeReview(storeName, productName, review, attributes)
 		if err != nil {
 			return nil, err
 		}
@@ -42,9 +43,10 @@ func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *R
 	}
 
 	reviewMiningStruct := ReviewMiningStruct{
-		StoreName:  storeName,
-		Attributes: attributes,
-		Results:    results,
+		StoreName:   storeName,
+		ProductName: productName,
+		Attributes:  attributes,
+		Results:     results,
 	}
 
 	// **為評論分析結果添加摘要**
@@ -60,7 +62,7 @@ func ReviewMining(storeName string, reviews []string) (reviewMiningResultInfo *R
 	return reviewMiningResultInfo, nil
 }
 
-func generateAttributesFromReviews(storeName string, reviews []string) ([]string, error) {
+func generateAttributesFromReviews(storeName string, productName string, reviews []string) ([]string, error) {
 	var allAttributes []string
 	// **迭代 5 次以提升精準度**
 	for range 5 {
@@ -71,8 +73,11 @@ func generateAttributesFromReviews(storeName string, reviews []string) ([]string
 			for _, review := range chunk {
 				chunkedReviewsStr += "  - 「" + review + "」\n"
 			}
-
-			prompt := "您是全球頂尖的資料探勘專家，正在幫名為「" + storeName + "」的店家製作精準的分析報告。讓我們一步一步思考來捕捉評論中的各個屬性:\n" +
+			beginningPrompt := "您是全球頂尖的資料探勘專家，正在幫名為「" + storeName + "」的店家或機構"
+			if productName != "" {
+				beginningPrompt += "的「" + productName + "」（一項產品或服務）"
+			}
+			prompt := beginningPrompt + "製作精準的分析報告。讓我們一步一步思考來捕捉評論中的各個屬性:\n" +
 				"1. 首先，仔細閱讀下列評論，並從中歸納出能夠完整反映評論主旨的各項具體屬性（注意：單一評論可能同時涉及多個屬性）:\n" +
 				chunkedReviewsStr +
 				"2. 屬性的種類包括但不限於：\n" +
@@ -108,9 +113,13 @@ func generateAttributesFromReviews(storeName string, reviews []string) ([]string
 	return allAttributes, nil
 }
 
-func analyzeReview(storeName, review string, attributes []string) (*singleReviewMiningResult, error) {
+func analyzeReview(storeName, productName string, review string, attributes []string) (*singleReviewMiningResult, error) {
 	sentimentClassification := [3]string{"positive", "negative", "neutral"}
-	prompt := "您是一位全球頂尖的資料探勘專家，正在分析「" + storeName + "」（一間商店）的評論。請根據以下評論，找出涉及的屬性，並對每個屬性進行情緒分類。\n" +
+	beginningPrompt := "您是一位全球頂尖的資料探勘專家，正在分析「" + storeName + "」（一間商店或機構）"
+	if productName != "" {
+		beginningPrompt += "的「" + productName + "」（一項產品或服務）"
+	}
+	prompt := beginningPrompt + "的評論。請根據以下評論，找出涉及的屬性，並對每個屬性進行情緒分類。\n" +
 		"評論：「" + review + "」\n" +
 		"- 請根據已識別的屬性，找出評論涉及的類別，並對每個類別進行情緒分類。\n" +
 		"- 全部的屬性：`" + conv.ToString(attributes) + "`\n" +
@@ -133,7 +142,11 @@ func analyzeReview(storeName, review string, attributes []string) (*singleReview
 }
 
 func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
-	prompt := "您是一位全球頂尖的商店教練（Store Coach），正在幫名為「" + resultInfo.StoreName + "」的店家製作精準的分析報告。請根據以下評論分析結果，撰寫一份簡潔的摘要，概述評論中的主要屬性及其情緒分類。\n" +
+	beginningPrompt := "您是一位全球頂尖的商店教練（Store Coach），正在幫名為「" + resultInfo.StoreName + "」的店家或機構"
+	if resultInfo.ProductName != "" {
+		beginningPrompt += "的「" + resultInfo.ProductName + "」（一項產品或服務）"
+	}
+	prompt := beginningPrompt + "製作精準的分析報告。請根據以下評論分析結果，撰寫一份簡潔的摘要，概述評論中的主要屬性及其情緒分類。\n" +
 		"所有屬性：`" + conv.ToString(resultInfo.Attributes) + "`\n" +
 		"分析結果：\n" +
 		"```json\n" + conv.ToString(resultInfo.Results) + "\n```\n" +

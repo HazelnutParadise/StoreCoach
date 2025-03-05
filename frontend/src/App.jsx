@@ -62,7 +62,8 @@ const App = () => {
   const currentYear = new Date().getFullYear();
 
   const spreadsheetRef = useRef(null);
-  let [storeName, setStoreName] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [productName, setProductName] = useState("");
 
   // 取得表格數據（會自動忽略空白列）
   const handleStartReviewMining = () => {
@@ -80,6 +81,7 @@ const App = () => {
       axios
         .post("/api/review-mining", {
           storeName,
+          productName,
           reviews,
         })
         .then((res) => {
@@ -98,20 +100,28 @@ const App = () => {
           path="/"
           element={
             <div className="container">
-              <div className="tips card">
-                至 Github 查看原始碼：<a href=""></a>
-              </div>
               <div className="card">
                 <h2>AI 評論探勘</h2>
                 <br />
-                <div className="input-box">
-                  <label htmlFor="store-name">商店名稱</label>
-                  <input
-                    type="text"
-                    id="store-name"
-                    value={storeName}
-                    onChange={(e) => setStoreName(e.target.value)}
-                  />
+                <div className="input-container">
+                  <div className="input-box">
+                    <label htmlFor="store-name">商店名稱</label>
+                    <input
+                      type="text"
+                      id="store-name"
+                      value={storeName}
+                      onChange={(e) => setStoreName(e.target.value)}
+                    />
+                  </div>
+                  <br />
+                  <div className="input-box">
+                    <label htmlFor="product-name">商品名稱(選填)</label>
+                    <input
+                      type="text"
+                      id="product-name"
+                      onChange={(e) => setProductName(e.target.value)}
+                    />
+                  </div>
                 </div>
                 <br />
                 <ReviewsInput
@@ -119,6 +129,15 @@ const App = () => {
                   columnLabels={["輸入或貼上評論內容 (列數會自動擴張)："]}
                 />
                 <button onClick={handleStartReviewMining}>開始探勘</button>
+              </div>
+              <div className="tips card">
+                此專案採用 Apache 2.0 License 開源，歡迎前往 Github 查看原始碼：
+                <a
+                  target="_blank"
+                  href="https://github.com/HazelnutParadise/StoreCoach"
+                >
+                  https://github.com/HazelnutParadise/StoreCoach
+                </a>
               </div>
             </div>
           }

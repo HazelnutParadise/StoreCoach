@@ -37,7 +37,9 @@ func Test_generateAttributesFromReviews(t *testing.T) {
 		"不衛生，價格也不便宜。",
 	}
 
-	got, err := generateAttributesFromReviews(storeName, reviews)
+	// productName := "牛排"
+
+	got, err := generateAttributesFromReviews(storeName, "", reviews)
 	if err != nil {
 		t.Errorf("generateTopics(%v) error: %v", reviews, err)
 	}
@@ -59,8 +61,9 @@ func TestReviewMining(t *testing.T) {
 		// "味道一般，價格偏高。",
 		// "不是最美味，但也不難吃。",
 	}
+	productName := "牛排"
 
-	got, err := ReviewMining(storeName, reviews)
+	got, err := ReviewMining(storeName, productName, reviews)
 	fmt.Print(fmt.Sprint(got), "\n")
 	// for _, v := range got.Results {
 	// 	print(fmt.Sprint(v), "\n")

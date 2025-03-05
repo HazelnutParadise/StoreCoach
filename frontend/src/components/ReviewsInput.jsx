@@ -22,7 +22,7 @@ const SpreadsheetInput = forwardRef((props, ref) => {
   const handleChange = (newData) => {
     setData(newData);
 
-    // 自動新增行（最後一行輸入時）
+    // 自動新增列（最後一列輸入時）
     if (newData.length > 0 && newData[newData.length - 1][0].value !== "") {
       setData([...newData, [{ value: "" }]]);
     }

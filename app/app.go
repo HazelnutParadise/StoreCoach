@@ -14,9 +14,10 @@ var json = jsoniter.ConfigFastest
 var ReviewMiningDataBuf sync.Map
 
 type ReviewData struct {
-	StoreName string   `json:"storeName"`
-	Reviews   []string `json:"reviews"`
-	timeStamp int64
+	StoreName   string   `json:"storeName"`
+	ProductName string   `json:"productName"`
+	Reviews     []string `json:"reviews"`
+	timeStamp   int64
 }
 
 func init() {
@@ -57,7 +58,8 @@ func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error)
 	}
 	reviews := reviewData.(ReviewData).Reviews
 	storeName := reviewData.(ReviewData).StoreName
-	result, err = ReviewMining(storeName, reviews)
+	productName := reviewData.(ReviewData).ProductName
+	result, err = ReviewMining(storeName, productName, reviews)
 	return result, err
 }
 
