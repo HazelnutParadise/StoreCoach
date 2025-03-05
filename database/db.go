@@ -8,7 +8,7 @@ import (
 var DB *gorm.DB
 
 const (
-	host     = "localhost"
+	host     = "postgres"
 	port     = "9920"
 	user     = "user"
 	password = "password"
