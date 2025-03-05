@@ -1,0 +1,15 @@
+services:
+  web:
+    image: store-coach
+    ports:
+      - "6688:8080"
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: store_coach
+    ports:
+      - "6689:5432"
+    volumes:
+      - /mnt/hdd0/StoreCoach/db:/var/lib/postgresql/data
