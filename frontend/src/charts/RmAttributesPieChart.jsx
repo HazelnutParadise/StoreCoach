@@ -1,6 +1,6 @@
 import { Doughnut } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Chart } from "chart.js";
+import { Chart, Legend } from "chart.js";
 import ChartStyle from "./ChartStyle";
 
 Chart.register(ChartDataLabels);
@@ -57,6 +57,7 @@ const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
   };
 
   const options = {
+    maintainAspectRatio: false,
     plugins: {
       datalabels: {
         formatter: (value, context) => {
