@@ -17,8 +17,8 @@
 }
 
 .fullscreen-loader .logo {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: auto;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

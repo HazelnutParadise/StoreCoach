@@ -265,8 +265,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 
   useEffect(() => {
-    if (isLoading) setPageTitle("載入中...");
-    else if (rmProductName)
+    if (rmProductName)
       setPageTitle(`${rmStoreName}的${rmProductName}的評論探勘報告`);
     else setPageTitle(`${rmStoreName}的評論探勘報告`);
   }, [setPageTitle, isLoading]);
