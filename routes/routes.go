@@ -63,6 +63,6 @@ func SetRoutes(r *gin.Engine) {
 	})
 	r.Static("/assets", "frontend/dist/assets")
 	r.NoRoute(func(c *gin.Context) {
-		c.File("frontend/dist/index.html")
+		c.File("./frontend/dist/index.html")
 	})
 }
