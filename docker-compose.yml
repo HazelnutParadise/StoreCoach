@@ -2,10 +2,10 @@ services:
   web:
     image: store-coach
     ports:
-      - "6688:8080"
+      - "6868:8080"
   mongo:
     image: mongodb/mongodb-community-server:latest
     ports:
-      - "6689:27017"
+      - "6869:27017"
     volumes:
       - /mnt/hdd0/StoreCoach/db:/data/db
