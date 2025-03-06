@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 RUN go build -o main
 
-FROM scratch
+FROM alpine:latest
 WORKDIR /
 COPY --from=bun /app/frontend/dist /frontend/dist
 COPY --from=build /app/main /main
