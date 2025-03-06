@@ -1,6 +1,6 @@
 services:
   web:
-    image: store-coach
+    image: storecoach
     ports:
       - "6868:8080"
     restart: unless-stopped
@@ -9,5 +9,5 @@ services:
     ports:
       - "6869:27017"
     volumes:
-      - /mnt/hdd0/StoreCoach/db:/data/db
+      - /mnt/hdd0/storecoach/db:/data/db
     restart: unless-stopped

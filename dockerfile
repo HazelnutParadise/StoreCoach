@@ -13,4 +13,4 @@ WORKDIR /
 COPY --from=bun /app/frontend/dist /frontend/dist
 COPY --from=build /app/main /main
 
-CMD ["/main"]
+CMD ["./main"]
