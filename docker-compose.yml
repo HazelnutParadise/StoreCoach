@@ -10,4 +10,5 @@ services:
       - "6867:27017"
     volumes:
       - /mnt/hdd0/storecoach/db:/data/db
+    user: root
     restart: unless-stopped

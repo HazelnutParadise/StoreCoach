@@ -14,5 +14,6 @@ FROM alpine:latest
 WORKDIR /
 COPY --from=bun /app/frontend/dist /frontend/dist
 COPY --from=build /app/main /main
+RUN chmod +x main
 
 CMD ["./main"]
