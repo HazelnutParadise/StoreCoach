@@ -8,20 +8,21 @@ import (
 )
 
 type ReviewMiningStruct struct {
-	StoreName   string                     `json:"storeName"`
-	ProductName string                     `json:"productName"`
-	Attributes  []string                   `json:"attributes"`
-	Results     []SingleReviewMiningResult `json:"results"`
-	Summary     string                     `json:"summary"`
-	Timestamp   int64                      `json:"timestamp"`
+	DataUUID    string                     `bson:"dataUUID"`
+	StoreName   string                     `json:"storeName" bson:"storeName"`
+	ProductName string                     `json:"productName" bson:"productName"`
+	Attributes  []string                   `json:"attributes" bson:"attributes"`
+	Results     []SingleReviewMiningResult `json:"results" bson:"results"`
+	Summary     string                     `json:"summary" bson:"summary"`
+	Timestamp   int64                      `json:"timestamp" bson:"timestamp"`
 }
 
 type SingleReviewMiningResult struct {
-	ReviewContent string `json:"reviewContent"`
+	ReviewContent string `json:"reviewContent" bson:"reviewContent"`
 	MiningResults []struct {
-		Attribute string `json:"attribute"`
-		Sentiment string `json:"sentiment"`
-	} `json:"miningResults"`
+		Attribute string `json:"attribute" bson:"attribute"`
+		Sentiment string `json:"sentiment" bson:"sentiment"`
+	} `json:"miningResults" bson:"miningResults"`
 }
 
 func ReviewMining(storeName string, productName string, reviews []string) (reviewMiningResultInfo *ReviewMiningStruct, err error) {

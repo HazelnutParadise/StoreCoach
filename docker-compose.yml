@@ -3,13 +3,9 @@ services:
     image: store-coach
     ports:
       - "6688:8080"
-  postgres:
-    image: postgres:9.6
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: store_coach
+  mongo:
+    image: mongodb/mongodb-community-server:8.0
     ports:
-      - "6689:5432"
+      - "6689:27017"
     volumes:
-      - /mnt/hdd0/StoreCoach/db:/var/lib/postgresql/data
+      - /mnt/hdd0/StoreCoach/db:/data/db
