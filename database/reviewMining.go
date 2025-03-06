@@ -10,6 +10,9 @@ import (
 func FindReviewMiningResult(dataUUID string) (*app.ReviewMiningStruct, error) {
 	var result app.ReviewMiningStruct
 	found := MongoDB.Collection("reviewMiningResult").FindOne(context.Background(), bson.M{"dataUUID": dataUUID})
+	if found.Err() != nil {
+		return nil, found.Err()
+	}
 	if err := found.Decode(&result); err != nil {
 		return nil, err
 	}
