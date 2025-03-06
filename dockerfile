@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . .
 RUN go build -o main .
 RUN chmod +x main
+RUN ls -la
 
 FROM alpine:latest
 WORKDIR /
