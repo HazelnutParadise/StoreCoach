@@ -3,6 +3,7 @@ package main
 import (
 	"StoreCoach/routes"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
