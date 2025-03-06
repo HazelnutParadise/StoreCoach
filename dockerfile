@@ -6,6 +6,7 @@ RUN cd frontend && bun install --frozen-lockfile && bun run build
 FROM golang:1.23 AS build
 WORKDIR /app
 COPY . .
+RUN go get .
 RUN go build -o main .
 
 FROM alpine:latest
