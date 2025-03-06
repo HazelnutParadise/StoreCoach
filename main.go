@@ -9,9 +9,11 @@ import (
 )
 
 func init() {
-	err := godotenv.Load("StoreCoach.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if os.Getenv("GEMINI_API_KEY") == "" {
+		err := godotenv.Load("StoreCoach.env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 }
 
