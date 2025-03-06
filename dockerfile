@@ -10,4 +10,4 @@ COPY . .
 RUN go build -o main .
 RUN chmod +x main
 
-CMD ["app/main"]
+CMD ["./main"]
