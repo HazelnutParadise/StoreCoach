@@ -57,11 +57,7 @@ func SetRoutes(r *gin.Engine) {
 		c.JSON(200, result)
 	})
 
-	// TODO
-	r.GET("/vite.svg", func(c *gin.Context) {
-		c.File("frontend/dist/vite.svg")
-	})
-	r.Static("/assets", "frontend/dist/assets")
+	r.Static("/assets", "./frontend/dist/assets")
 	r.NoRoute(func(c *gin.Context) {
 		c.File("./frontend/dist/index.html")
 	})
