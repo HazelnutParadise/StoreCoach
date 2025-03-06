@@ -15,6 +15,7 @@ import ReviewsInput from "./components/ReviewsInput";
 import ReviewMiningResult from "./pages/ReviewMiningResult";
 import PageNotFound from "./pages/404";
 import "./App.css";
+import TextAD from "./components/TextAD";
 
 const App = () => {
   ChartJS.register(
@@ -100,6 +101,7 @@ const App = () => {
           path="/"
           element={
             <div className="container">
+              <TextAD />
               <div className="card">
                 <h2>AI 評論探勘</h2>
                 <br />

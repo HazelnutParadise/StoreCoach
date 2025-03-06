@@ -4,7 +4,7 @@ services:
     ports:
       - "6688:8080"
   mongo:
-    image: mongodb/mongodb-community-server:8.0
+    image: mongodb/mongodb-community-server:latest
     ports:
       - "6689:27017"
     volumes:

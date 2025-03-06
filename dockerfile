@@ -9,6 +9,7 @@ COPY . .
 RUN go build -o /main
 
 FROM scratch
+WORKDIR /
 COPY --from=build /app/main /main
 COPY --from=bun /app/frontend/dist /frontend/dist
 

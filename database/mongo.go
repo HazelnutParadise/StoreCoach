@@ -13,7 +13,7 @@ var (
 )
 
 const (
-	mongoHost         = "localhost"
+	mongoHost         = "mongo"
 	mongoPort         = "27017"
 	MongoDatabaseName = "StoreCoach"
 )
