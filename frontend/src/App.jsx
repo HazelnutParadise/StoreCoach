@@ -153,6 +153,7 @@ const App = () => {
                 <a
                   target="_blank"
                   href="https://github.com/HazelnutParadise/StoreCoach"
+                  style={{wordBreak: "break-all"}}
                 >
                   https://github.com/HazelnutParadise/StoreCoach
                 </a>
