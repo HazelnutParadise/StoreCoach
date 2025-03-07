@@ -60,6 +60,9 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 		c.JSON(200, result)
 	})
 
+	r.GET("/", func(c *gin.Context) {
+		c.Writer.Write(indexHtml)
+	})
 	r.StaticFS("/assets", assets)
 	r.NoRoute(func(c *gin.Context) {
 		c.Writer.Write(indexHtml)
