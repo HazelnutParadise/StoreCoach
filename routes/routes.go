@@ -3,12 +3,15 @@ package routes
 import (
 	"StoreCoach/app"
 	"StoreCoach/database"
+	"net/http"
+
+	_ "embed"
 
 	"github.com/HazelnutParadise/Go-Utils/sliceutil"
 	"github.com/gin-gonic/gin"
 )
 
-func SetRoutes(r *gin.Engine) {
+func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	apiGp := r.Group("/api")
 	apiGp.POST("/review-mining", func(c *gin.Context) {
 		// 取得 json 資料，給 uuid，存入 DataBuf
@@ -57,8 +60,8 @@ func SetRoutes(r *gin.Engine) {
 		c.JSON(200, result)
 	})
 
-	r.Static("/assets", "./frontend/dist/assets")
+	r.StaticFS("/assets", assets)
 	r.NoRoute(func(c *gin.Context) {
-		c.File("./frontend/dist/index.html")
+		c.Writer.Write(indexHtml)
 	})
 }
