@@ -3,6 +3,7 @@ package main
 import (
 	"StoreCoach/routes"
 	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 
@@ -16,7 +17,7 @@ import (
 var HTMLfile []byte
 
 //go:embed frontend/dist/assets/*
-var Assets embed.FS
+var AssetsDir embed.FS
 
 func init() {
 	err := godotenv.Load("StoreCoach.env")
@@ -26,9 +27,14 @@ func init() {
 }
 
 func main() {
+	subFS, err := fs.Sub(AssetsDir, "frontend/dist/assets")
+	if err != nil {
+		log.Fatal(err)
+	}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	routes.SetRoutes(r, HTMLfile, http.FS(Assets))
+	routes.SetRoutes(r, HTMLfile, http.FS(subFS))
+
 	r.Run(":8080")
 
 }
