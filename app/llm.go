@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/HazelnutParadise/insyra"
 	"github.com/google/uuid"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/googleai"
@@ -16,11 +17,12 @@ var (
 	llmRequestInterval time.Duration = 500 * time.Millisecond
 )
 
-var llmReqBuf = sync.Map{}
+var llmReqBuf = insyra.NewDataList()
 var llmRespBuf = sync.Map{}
 var llmErrBuf = sync.Map{}
 
 type llmReq struct {
+	uuid        string
 	prompt      string
 	temperature float64
 }
@@ -31,15 +33,10 @@ func init() {
 			time.Sleep(llmRequestInterval)
 			var reqUUID string
 			var req llmReq
-			llmReqBuf.Range(func(key, val any) bool {
-				if key.(string) != "" {
-					reqUUID = key.(string)
-					req = val.(llmReq)
-					return false
-				}
-				return true
-			})
-			llmReqBuf.Delete(reqUUID)
+			if llmReqBuf.Len() > 0 {
+				req = llmReqBuf.Pop().(llmReq)
+				reqUUID = req.uuid
+			}
 			if reqUUID == "" {
 				continue
 			}
@@ -56,10 +53,11 @@ func init() {
 func CallLLM(prompt string, temperature float64) (string, error) {
 	reqUUID := uuid.New().String()
 	req := llmReq{
+		uuid:        reqUUID,
 		prompt:      prompt,
 		temperature: temperature,
 	}
-	llmReqBuf.Store(reqUUID, req)
+	llmReqBuf.InsertAt(0, req)
 	for {
 		if llmResp, ok := llmRespBuf.LoadAndDelete(reqUUID); ok {
 			return llmResp.(string), nil
