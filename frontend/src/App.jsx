@@ -106,6 +106,22 @@ const App = () => {
                 <h2>AI 評論探勘</h2>
                 <br />
                 <div className="input-container">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      paddingBottom: "20px",
+                    }}
+                  >
+                    <a
+                      className="btn"
+                      style={{ padding: "8px 12px", borderRadius: "50px" }}
+                      href="https://gmaps-reviews.hazelnut-paradise.com/?mode=storecoach"
+                    >
+                      使用 <strong>估咩評論小扒手</strong> 爬取評論
+                    </a>
+                  </div>
+
                   <div className="input-box">
                     <label htmlFor="store-name">商店名稱</label>
                     <input
