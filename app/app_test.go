@@ -63,7 +63,7 @@ func TestReviewMining(t *testing.T) {
 	}
 	productName := "牛排"
 
-	got, err := ReviewMining(storeName, productName, reviews)
+	got, err := ReviewMining(storeName, productName, reviews, nil)
 	fmt.Print(fmt.Sprint(got), "\n")
 	// for _, v := range got.Results {
 	// 	print(fmt.Sprint(v), "\n")

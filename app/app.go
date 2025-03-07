@@ -17,6 +17,7 @@ type ReviewData struct {
 	StoreName   string   `json:"storeName"`
 	ProductName string   `json:"productName"`
 	Reviews     []string `json:"reviews"`
+	Ratings     []uint8  `json:"ratings"`
 	timeStamp   int64
 }
 
@@ -51,15 +52,19 @@ func ReviewMining_SaveToBuf(reviewData ReviewData) (dataUUID string) {
 }
 
 func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error) {
-	reviewData, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
+	reviewDataAny, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
 	if !ok {
 		err = errors.New("data not found")
 		return nil, err
 	}
-	reviews := reviewData.(ReviewData).Reviews
-	storeName := reviewData.(ReviewData).StoreName
-	productName := reviewData.(ReviewData).ProductName
-	result, err = ReviewMining(storeName, productName, reviews)
+
+	reviewData := reviewDataAny.(ReviewData)
+	reviews := reviewData.Reviews
+	storeName := reviewData.StoreName
+	productName := reviewData.ProductName
+	ratings := reviewData.Ratings
+
+	result, err = ReviewMining(storeName, productName, reviews, ratings)
 	return result, err
 }
 

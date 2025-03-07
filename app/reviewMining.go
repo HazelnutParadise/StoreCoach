@@ -19,13 +19,14 @@ type ReviewMiningStruct struct {
 
 type SingleReviewMiningResult struct {
 	ReviewContent string `json:"reviewContent" bson:"reviewContent"`
+	ReviewRating  uint8  `json:"reviewRating" bson:"reviewRating"`
 	MiningResults []struct {
 		Attribute string `json:"attribute" bson:"attribute"`
 		Sentiment string `json:"sentiment" bson:"sentiment"`
 	} `json:"miningResults" bson:"miningResults"`
 }
 
-func ReviewMining(storeName string, productName string, reviews []string) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
+func ReviewMining(storeName string, productName string, reviews []string, ratings []uint8) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
 	// **將評論分塊並生成屬性**
 	attributes, err := generateAttributesFromReviews(storeName, productName, reviews)
 	if err != nil {
@@ -34,14 +35,21 @@ func ReviewMining(storeName string, productName string, reviews []string) (revie
 
 	// **分析評論**
 	var results []SingleReviewMiningResult
-	for _, review := range reviews {
+	for i, review := range reviews {
 		result, err := analyzeReview(storeName, productName, review, attributes)
 		if err != nil {
 			return nil, err
 		}
 		result.ReviewContent = review
+		// 順便存評分
+		if ratings != nil && len(ratings) == len(reviews) {
+			result.ReviewRating = ratings[i]
+		}
+
 		results = append(results, *result)
 	}
+
+	// TODO: t-test
 
 	reviewMiningStruct := ReviewMiningStruct{
 		StoreName:   storeName,
