@@ -41,7 +41,8 @@ const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
   });
 
   sortedAttributes = sortedAttributes.slice(0, 5);
-  sortedAttributes.push("其他");
+  if (sortedAttributeTimesList[5] && sortedAttributeTimesList[5] !== 0)
+    sortedAttributes.push("其他");
 
   console.log(sortedAttributes);
   console.log(sortedAttributeTimesList);
