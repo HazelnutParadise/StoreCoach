@@ -273,43 +273,28 @@ const ReviewMiningResult = ({ setPageTitle }) => {
     else setPageTitle(`${rmStoreName}的評論探勘報告`);
   }, [setPageTitle, isLoading]);
 
-  useEffect(async () => {
-    try {
-      let finished = false;
-      let res;
-      let count = 0;
-      while (!finished) {
-        count++;
-        res = await fetch(`/api/review-mining/${dataUUID}`, {
-          headers: {
-            "Cache-Control": "no-cache",
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        });
-        if (!res.ok && res.status !== 524) {
-          finished = true;
-          throw new Error("Failed to fetch data");
-        } else if (res.ok) {
-          finished = true;
-        } else if (count > 2) {
-          finished = true;
-          throw new Error("Failed to fetch data");
-        }
-        time.sleep(120*1000)
-      }
-      const resData = await res.json();
-      if (!resData.storeName)
-        throw new Error("No data returned from the server");
-      console.table(resData);
-      setResult(resData);
-    } catch (err) {
-      alert("Failed to fetch data");
-      console.error(err);
-      navigate("/");
-    } finally {
-      setIsLoading(false);
-    }
+  useEffect(() => {
+    fetch(`/api/review-mining/${dataUUID}`, {
+      headers: {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }})
+      .then((res) => res.json())
+      .then((resJson) => {
+        if (!resJson.storeName)
+          throw new Error("No data returned from the server");
+        console.table(resJson);
+        setResult(resJson);
+      })
+      .catch((err) => {
+        alert("Failed to fetch data");
+        console.error(err);
+        navigate("/");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
   if (isLoading) {
     return <FullScreenLoader />;
