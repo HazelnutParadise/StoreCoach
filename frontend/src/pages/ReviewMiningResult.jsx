@@ -264,7 +264,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 
   useEffect(() => {
-    if (isLoading) {
+    if (!rmStoreName) {
       setPageTitle("正在探勘評論...");
       return;
     }
