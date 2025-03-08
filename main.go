@@ -25,7 +25,7 @@ const DevMode = false
 func init() {
 	err := godotenv.Load("StoreCoach.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 }
 
