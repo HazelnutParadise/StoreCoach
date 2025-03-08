@@ -25,6 +25,7 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 			})
 			return
 		}
+		log.Printf("Received review mining request: %+v", reviewData)
 		// 清除空的評論
 		iters := len(reviewData.Reviews)
 		for i := iters - 1; i >= 0; i-- {
