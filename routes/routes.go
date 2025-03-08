@@ -3,6 +3,7 @@ package routes
 import (
 	"StoreCoach/app"
 	"StoreCoach/database"
+	"log"
 	"net/http"
 
 	_ "embed"
@@ -16,7 +17,14 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	apiGp.POST("/review-mining", func(c *gin.Context) {
 		// 取得 json 資料，給 uuid，存入 DataBuf
 		reviewData := app.ReviewData{}
-		c.BindJSON(&reviewData)
+		err := c.ShouldBindJSON(&reviewData)
+		if err != nil {
+			log.Println(err)
+			c.JSON(400, gin.H{
+				"message": "Bad Request",
+			})
+			return
+		}
 		// 清除空的評論
 		iters := len(reviewData.Reviews)
 		for i := iters - 1; i >= 0; i-- {
