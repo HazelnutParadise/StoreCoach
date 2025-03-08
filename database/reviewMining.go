@@ -8,6 +8,9 @@ import (
 )
 
 func FindReviewMiningResult(dataUUID string) (*app.ReviewMiningStruct, error) {
+	if NoDBMode {
+		return nil, nil
+	}
 	var result app.ReviewMiningStruct
 	found := MongoDB.Collection("reviewMiningResult").FindOne(context.Background(), bson.M{"dataUUID": dataUUID})
 	if found.Err() != nil {
@@ -19,6 +22,9 @@ func FindReviewMiningResult(dataUUID string) (*app.ReviewMiningStruct, error) {
 	return &result, nil
 }
 func SaveReviewMiningResult(dataUUID string, result *app.ReviewMiningStruct) error {
+	if NoDBMode {
+		return nil
+	}
 	result.DataUUID = dataUUID
 	_, err := MongoDB.Collection("reviewMiningResult").InsertOne(context.Background(), result)
 	return err

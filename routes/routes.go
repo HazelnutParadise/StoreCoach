@@ -23,6 +23,9 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 			if reviewData.Reviews[i] == "" {
 				var err error
 				reviewData.Reviews, err = sliceutil.Remove(reviewData.Reviews, i)
+				if reviewData.Ratings != nil {
+					reviewData.Ratings, err = sliceutil.Remove(reviewData.Ratings, i)
+				}
 				if err != nil {
 					c.JSON(400, gin.H{
 						"message": "Bad Request",

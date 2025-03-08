@@ -18,7 +18,13 @@ const (
 	MongoDatabaseName = "StoreCoach"
 )
 
-func init() {
+var NoDBMode = false
+
+func InitMongo(devMode bool) {
+	if devMode {
+		NoDBMode = true
+		return
+	}
 	var err error
 	mongoClient, err = mongo.Connect(options.Client().ApplyURI("mongodb://" + mongoHost + ":" + mongoPort))
 	if err != nil {
