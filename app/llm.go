@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	llmRequestInterval time.Duration = 1500 * time.Millisecond
+	llmRequestInterval time.Duration = 600 * time.Millisecond
 )
 
 var llmReqBuf = insyra.NewDataList()

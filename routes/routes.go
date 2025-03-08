@@ -44,6 +44,12 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 			}
 		}
 		dataUUID := app.ReviewMining_SaveToBuf(reviewData)
+		go func() {
+			result, err := app.HandleReviewMining(dataUUID)
+			if err == nil {
+				database.SaveReviewMiningResult(dataUUID, result)
+			}
+		}()
 		c.JSON(200, gin.H{
 			"dataUUID": dataUUID,
 		})
@@ -51,25 +57,28 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
 		log.Printf("Received request for dataUUID: %s", dataUUID)
-		result, _ := database.FindReviewMiningResult(dataUUID)
-		if result != nil {
-			c.JSON(200, result)
-			return
-		}
-		var err error
-		result, err = app.HandleReviewMining(dataUUID)
-		if err != nil {
-			if err.Error() == "data not found" {
-				c.JSON(404, gin.H{
-					"message": "Data not found",
-				})
+		var result *app.ReviewMiningStruct
+		for result == nil {
+			result, _ = database.FindReviewMiningResult(dataUUID)
+			if result != nil {
+				c.JSON(200, result)
 				return
 			}
-			c.JSON(500, gin.H{
-				"message": "Internal Server Error",
-			})
+			var err error
+			result, err = app.HandleReviewMining(dataUUID)
+			if err != nil {
+				if err.Error() == "data not found" {
+					c.JSON(404, gin.H{
+						"message": "Data not found",
+					})
+					return
+				}
+				c.JSON(500, gin.H{
+					"message": "Internal Server Error",
+				})
+			}
 		}
-		database.SaveReviewMiningResult(dataUUID, result)
+
 		c.JSON(200, result)
 	})
 

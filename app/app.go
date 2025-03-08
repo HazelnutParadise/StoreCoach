@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/HazelnutParadise/insyra"
 	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -12,6 +13,8 @@ import (
 var json = jsoniter.ConfigFastest
 
 var ReviewMiningDataBuf sync.Map
+
+var isReviewMiningBuf = insyra.NewDataList()
 
 type ReviewData struct {
 	StoreName   string   `json:"storeName"`
@@ -52,19 +55,24 @@ func ReviewMining_SaveToBuf(reviewData ReviewData) (dataUUID string) {
 }
 
 func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error) {
-	reviewDataAny, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
-	if !ok {
-		err = errors.New("data not found")
-		return nil, err
+	if isReviewMiningBuf.FindFirst(dataUUID) == nil {
+		isReviewMiningBuf.Append(dataUUID)
+
+		reviewDataAny, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
+		if !ok {
+			err = errors.New("data not found")
+			return nil, err
+		}
+
+		reviewData := reviewDataAny.(ReviewData)
+		reviews := reviewData.Reviews
+		storeName := reviewData.StoreName
+		productName := reviewData.ProductName
+		ratings := reviewData.Ratings
+
+		result, err = ReviewMining(storeName, productName, reviews, ratings)
+		isReviewMiningBuf.DropAll(dataUUID)
 	}
-
-	reviewData := reviewDataAny.(ReviewData)
-	reviews := reviewData.Reviews
-	storeName := reviewData.StoreName
-	productName := reviewData.ProductName
-	ratings := reviewData.Ratings
-
-	result, err = ReviewMining(storeName, productName, reviews, ratings)
 	return result, err
 }
 
