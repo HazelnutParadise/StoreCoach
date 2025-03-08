@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	llmRequestInterval time.Duration = 600 * time.Millisecond
+	llmRequestInterval time.Duration = 2100 * time.Millisecond
 )
 
 var llmReqBuf = insyra.NewDataList()
@@ -77,7 +77,7 @@ func requestLLM(req llmReq) (string, error) {
 	ctx := context.Background()
 	llm, err := googleai.New(ctx, googleai.WithAPIKey(
 		os.Getenv("GEMINI_API_KEY")),
-		googleai.WithDefaultModel("gemini-2.0-flash"),
+		googleai.WithDefaultModel("gemini-2.0-flash-lite"),
 		googleai.WithDefaultTemperature(req.temperature),
 	)
 	if err != nil {
