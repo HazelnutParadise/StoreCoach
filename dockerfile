@@ -12,5 +12,6 @@ RUN CGO_ENABLED=0 go build -o main .
 FROM alpine:latest
 
 COPY --from=backend /app/main /main
+COPY --from=backend /app/StoreCoach.env /StoreCoach.env
 
 CMD ["/main"]
