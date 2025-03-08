@@ -1,13 +1,16 @@
-FROM oven/bun:latest AS bun
+FROM oven/bun:latest AS frontend
 WORKDIR /app
 COPY . .
 RUN cd frontend && bun install --frozen-lockfile && bun run build
 
-FROM golang:1.23-alpine
+FROM golang:1.23-alpine AS backend
 WORKDIR /app
-COPY --from=bun /app/frontend/dist /frontend/dist
+COPY --from=frontend /app/frontend/dist /frontend/dist
 COPY . .
-RUN go build -o main .
-RUN chmod +x main
+RUN CGO_ENABLED=0 go build -o main .
 
-CMD ["./main"]
+FROM alpine:latest
+
+COPY --from=backend /app/main /main
+
+CMD ["/main"]
