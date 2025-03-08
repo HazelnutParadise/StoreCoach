@@ -265,6 +265,10 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 
   useEffect(() => {
+    if (isLoading) {
+      setPageTitle("正在探勘評論...");
+      return;
+    }
     if (rmProductName)
       setPageTitle(`${rmStoreName}的${rmProductName}的評論探勘報告`);
     else setPageTitle(`${rmStoreName}的評論探勘報告`);
@@ -272,7 +276,13 @@ const ReviewMiningResult = ({ setPageTitle }) => {
 
   useEffect(() => {
     axios
-      .get(`/api/review-mining/${dataUUID}`)
+      .get(`/api/review-mining/${dataUUID}`, {
+        headers: {
+          "Cache-Control": "no-cache",
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+      })
       .then((res) => {
         if (!res.data.storeName)
           throw new Error("No data returned from the server");

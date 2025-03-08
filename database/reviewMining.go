@@ -3,6 +3,7 @@ package database
 import (
 	"StoreCoach/app"
 	"context"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
@@ -24,6 +25,9 @@ func FindReviewMiningResult(dataUUID string) (*app.ReviewMiningStruct, error) {
 func SaveReviewMiningResult(dataUUID string, result *app.ReviewMiningStruct) error {
 	if NoDBMode {
 		return nil
+	}
+	if result == nil {
+		return errors.New("result is nil")
 	}
 	result.DataUUID = dataUUID
 	_, err := MongoDB.Collection("reviewMiningResult").InsertOne(context.Background(), result)
