@@ -48,7 +48,6 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 		}
 		var err error
 		result, err = app.HandleReviewMining(dataUUID)
-		database.SaveReviewMiningResult(dataUUID, result)
 		if err != nil {
 			if err.Error() == "data not found" {
 				c.JSON(404, gin.H{
@@ -60,6 +59,7 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 				"message": "Internal Server Error",
 			})
 		}
+		database.SaveReviewMiningResult(dataUUID, result)
 		c.JSON(200, result)
 	})
 
