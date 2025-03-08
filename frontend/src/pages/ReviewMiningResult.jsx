@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import FullScreenLoader from "../components/FullScreenLoader";
@@ -275,14 +274,12 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   }, [setPageTitle, isLoading]);
 
   useEffect(() => {
-    axios
-      .get(`/api/review-mining/${dataUUID}`, {
-        headers: {
-          "Cache-Control": "no-cache",
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-      })
+    fetch(`/api/review-mining/${dataUUID}`, {
+      headers: {
+        "Cache-Control": "no-cache",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }})
       .then((res) => {
         if (!res.data.storeName)
           throw new Error("No data returned from the server");
