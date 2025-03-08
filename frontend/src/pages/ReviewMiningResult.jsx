@@ -4,6 +4,7 @@ import FullScreenLoader from "../components/FullScreenLoader";
 import "./ReviewMiningResult.css";
 import RmAttributesPieChart from "../charts/RmAttributesPieChart";
 import RmAttributesBarChart from "../charts/RmAttributesBarChart";
+import RmTtest from "../charts/RmTtest";
 
 const ReviewMiningResult = ({ setPageTitle }) => {
   const navigate = useNavigate();
@@ -260,18 +261,18 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmResults = result?.results;
   let rmSummary = result?.summary;
   const rmTimestamp = result?.timestamp;
+  const rmTtest = result?.ttest;
 
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 
   useEffect(() => {
     if (isLoading) {
       setPageTitle("正在探勘評論...");
-    }else if (rmProductName) {
+    } else if (rmProductName) {
       setPageTitle(`${rmStoreName}的${rmProductName}的評論探勘報告`);
-    }
-    else{
+    } else {
       setPageTitle(`${rmStoreName}的評論探勘報告`);
-    } 
+    }
   }, [setPageTitle, isLoading]);
 
   useEffect(() => {
@@ -279,8 +280,9 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       headers: {
         "Cache-Control": "no-cache",
         "Content-Type": "application/json",
-        "Accept": "application/json",
-      }})
+        Accept: "application/json",
+      },
+    })
       .then((res) => res.json())
       .then((resJson) => {
         if (!resJson.storeName)
@@ -356,6 +358,13 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                 />
               </div>
             </div>
+            {rmTtest ? (
+              <div>
+                <RmTtest rmTtest={rmTtest} />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div className="summary-box">
             <h3 className="title">教練的小叮嚀 💪</h3>
