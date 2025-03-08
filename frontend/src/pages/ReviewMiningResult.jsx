@@ -266,11 +266,12 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   useEffect(() => {
     if (!rmStoreName) {
       setPageTitle("正在探勘評論...");
-      return;
-    }
-    if (rmProductName)
+    }else if (rmProductName) {
       setPageTitle(`${rmStoreName}的${rmProductName}的評論探勘報告`);
-    else setPageTitle(`${rmStoreName}的評論探勘報告`);
+    }
+    else{
+      setPageTitle(`${rmStoreName}的評論探勘報告`);
+    } 
   }, [setPageTitle, isLoading]);
 
   useEffect(() => {
