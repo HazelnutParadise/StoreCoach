@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 
 	_ "embed"
 
@@ -27,6 +28,7 @@ func init() {
 	if err != nil {
 		log.Println("Error loading .env file")
 	}
+	log.Println(os.Getenv("GEMINI_API_KEY"))
 }
 
 func main() {
