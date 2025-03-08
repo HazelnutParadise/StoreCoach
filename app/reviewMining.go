@@ -5,16 +5,19 @@ import (
 	"time"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
+	"github.com/HazelnutParadise/insyra"
+	"github.com/HazelnutParadise/insyra/stats"
 )
 
 type ReviewMiningStruct struct {
-	DataUUID    string                     `bson:"dataUUID"`
-	StoreName   string                     `json:"storeName" bson:"storeName"`
-	ProductName string                     `json:"productName" bson:"productName"`
-	Attributes  []string                   `json:"attributes" bson:"attributes"`
-	Results     []SingleReviewMiningResult `json:"results" bson:"results"`
-	Summary     string                     `json:"summary" bson:"summary"`
-	Timestamp   int64                      `json:"timestamp" bson:"timestamp"`
+	DataUUID    string                                      `bson:"dataUUID"`
+	StoreName   string                                      `json:"storeName" bson:"storeName"`
+	ProductName string                                      `json:"productName" bson:"productName"`
+	Attributes  []string                                    `json:"attributes" bson:"attributes"`
+	Results     []SingleReviewMiningResult                  `json:"results" bson:"results"`
+	TTest       map[string]ReviewMiningAttributeTTestResult `json:"tTest" bson:"tTest"`
+	Summary     string                                      `json:"summary" bson:"summary"`
+	Timestamp   int64                                       `json:"timestamp" bson:"timestamp"`
 }
 
 type SingleReviewMiningResult struct {
@@ -24,6 +27,12 @@ type SingleReviewMiningResult struct {
 		Attribute string `json:"attribute" bson:"attribute"`
 		Sentiment string `json:"sentiment" bson:"sentiment"`
 	} `json:"miningResults" bson:"miningResults"`
+}
+
+type ReviewMiningAttributeTTestResult struct {
+	TValue float64 `json:"tValue" bson:"tValue"`
+	PValue float64 `json:"pValue" bson:"pValue"`
+	Df     int     `json:"df" bson:"df"`
 }
 
 func ReviewMining(storeName string, productName string, reviews []string, ratings []uint8) (reviewMiningResultInfo *ReviewMiningStruct, err error) {
@@ -50,12 +59,14 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 	}
 
 	// TODO: t-test
+	ttest := reviewsAttributeTTTest(attributes, results)
 
 	reviewMiningStruct := ReviewMiningStruct{
 		StoreName:   storeName,
 		ProductName: productName,
 		Attributes:  attributes,
 		Results:     results,
+		TTest:       ttest,
 	}
 
 	// **為評論分析結果添加摘要**
@@ -190,6 +201,32 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 	// 去除多餘的換行符
 	resultInfo.Summary = summary[:len(summary)-1]
 	return nil
+}
+
+func reviewsAttributeTTTest(attributes []string, miningResults []SingleReviewMiningResult) map[string]ReviewMiningAttributeTTestResult {
+	// TODO: t-test
+	var statResults = map[string]ReviewMiningAttributeTTestResult{}
+	for _, attribute := range attributes {
+		group0 := insyra.NewDataList()
+		group1 := insyra.NewDataList()
+	NEXT_RESULT:
+		for _, result := range miningResults {
+			for _, miningResult := range result.MiningResults {
+				if miningResult.Attribute == attribute {
+					group1.Append(result.ReviewRating)
+					continue NEXT_RESULT
+				}
+			}
+			group0.Append(result.ReviewRating)
+		}
+		result := stats.TwoSampleTTest(group0, group1, false)
+		statResults[attribute] = ReviewMiningAttributeTTestResult{
+			TValue: result.TValue,
+			PValue: result.PValue,
+			Df:     result.Df,
+		}
+	}
+	return statResults
 }
 
 // **合併去重的屬性函數**
