@@ -49,6 +49,7 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	})
 	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
+		log.Printf("Received request for dataUUID: %s", dataUUID)
 		result, _ := database.FindReviewMiningResult(dataUUID)
 		if result != nil {
 			c.JSON(200, result)
