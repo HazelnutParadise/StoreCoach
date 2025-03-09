@@ -14,7 +14,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
   attributes = attributes.slice(0, 5);
   return (
     <>
-      <h3>前五大屬性對顧客評分影響的顯著性（p值，顯著水準=0.05）</h3>
+      <h3>前五大屬性對顧客評分影響的顯著性（T檢定p值，顯著水準=0.05）</h3>
       <div className="ttest-container">
         {attributes.map((attribute) => (
           <div className="ttest-box">
@@ -34,7 +34,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
             ) : (
               <>
                 <span style={{ fontSize: "0.85rem" }}>
-                  {rmTtest[attribute].pValue}
+                  {(rmTtest[attribute].pValue).toFixed(4)}
                 </span>
                 <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
                   {rmTtest[attribute].pValue < 0.05 ? (

@@ -172,8 +172,17 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 		"所有屬性：`" + conv.ToString(resultInfo.Attributes) + "`\n" +
 		"分析結果：\n" +
 		"```json\n" + conv.ToString(resultInfo.Results) + "\n```\n" +
-		"- 回傳 JSON，格式：`\"{\"overall\": \"整體摘要\", \"advantages\": \"主要優點\", \"disadvantages\": \"主要缺點\", \"neutral\": \"中性評價\", \"suggestions\": [{\"title\": \"建議標題一\", \"content\": \"建議一內容說明\"}, {\"title\": \"建議標題二\", \"content\": \"建議二內容說明\"}]}\"`\n" +
-		"- 只回傳 JSON 陣列，不要回傳其他文字。"
+		"- 請根據以上分析結果，撰寫一份簡潔的摘要，包括以下內容：\n" +
+		"  1. overall：對評論的整體情緒進行總結。\n" +
+		"  2. advantages：列舉評論中提到的主要優點。\n" +
+		"  3. disadvantages：列舉評論中提到的主要缺點。\n" +
+		"  4. neutral：列舉評論中提到的中性評價。\n" +
+		"  5. 教練的建議（suggestions）：根據分析結果，提出至少3點建議（最好5點以上），幫助店家或機構改進。\n" +
+		"- 回傳 JSON，格式：`\"{\"overall\": \"整體摘要內容\", \"advantages\": \"主要優點內容\", \"disadvantages\": \"主要缺點內容\", \"neutral\": \"中性評價內容\", \"suggestions\": [{\"title\": \"建議標題一\", \"content\": \"建議一內容說明\"}, {\"title\": \"建議標題二\", \"content\": \"建議二內容說明\"}]}\"`\n" +
+		"- 只回傳 JSON 陣列，不要回傳其他文字。" +
+		"- 確實填好每一欄，不要有任何留空。" +
+		"- 在相應欄位中填寫內容就好，不要抄題" +
+		"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 	summary, err := CallLLM(prompt, 0.1)
 	if err != nil {
 		return err

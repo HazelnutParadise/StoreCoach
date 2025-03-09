@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"os"
 	"strings"
 	"sync"
 	"time"
@@ -10,12 +9,12 @@ import (
 	"github.com/HazelnutParadise/insyra"
 	"github.com/google/uuid"
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/llms/googleai"
+	"github.com/tmc/langchaingo/llms/ollama"
 )
 
 var (
-	// llmRequestInterval time.Duration = 0 * time.Millisecond
-	llmRequestInterval time.Duration = 2100 * time.Millisecond
+	llmRequestInterval time.Duration = 0 * time.Millisecond
+	// llmRequestInterval time.Duration = 2100 * time.Millisecond
 )
 
 var llmReqBuf = insyra.NewDataList()
@@ -76,15 +75,15 @@ func Unmarshal_LLM_JSON_Response[T any](resp string, v *T) error {
 
 func requestLLM(req llmReq) (string, error) {
 	ctx := context.Background()
-	llm, err := googleai.New(ctx, googleai.WithAPIKey(
-		os.Getenv("GEMINI_API_KEY")),
-		googleai.WithDefaultModel("gemini-2.0-flash-lite"),
-		googleai.WithDefaultTemperature(req.temperature),
-	)
-	// llm, err := ollama.New(ollama.WithModel("phi4-mini"))
-	// if err != nil {
-	// 	return "", err
-	// }
+	// llm, err := googleai.New(ctx, googleai.WithAPIKey(
+	// 	os.Getenv("GEMINI_API_KEY")),
+	// 	googleai.WithDefaultModel("gemini-2.0-flash-lite"),
+	// 	googleai.WithDefaultTemperature(req.temperature),
+	// )
+	llm, err := ollama.New(ollama.WithModel("gemma2:9b"), ollama.WithRunnerNumCtx(10240))
+	if err != nil {
+		return "", err
+	}
 
 	completion, err := llms.GenerateFromSinglePrompt(ctx, llm, req.prompt)
 	if err != nil {
