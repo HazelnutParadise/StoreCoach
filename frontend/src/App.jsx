@@ -56,14 +56,14 @@ const App = () => {
   }, [title]);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://src.hazelnut-paradise.com/utils.js";
-    script.async = false;
-    document.body.appendChild(script);
+    // const script = document.createElement("script");
+    // script.src = "https://src.hazelnut-paradise.com/utils.js";
+    // script.async = false;
+    // document.body.appendChild(script);
     getNavbar();
-    return () => {
-      document.body.removeChild(script);
-    };
+    // return () => {
+    //   document.body.removeChild(script);
+    // };
   }, []);
 
   const currentYear = new Date().getFullYear();
