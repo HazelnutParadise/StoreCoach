@@ -312,19 +312,21 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmTtest = result?.tTest;
 
   let attributeCount = {};
-  rmAttributes.forEach((element) => {
-    attributeCount[element] = 0;
-  });
-  // 計算每個屬性出現的次數
-  rmResults.forEach((result) => {
-    const miningResults = result.miningResults;
-    miningResults.forEach((miningResult) => {
-      if (miningResult.attribute in attributeCount) {
-        attributeCount[miningResult.attribute]++;
-      }
+  if (result) {
+    rmAttributes.forEach((element) => {
+      attributeCount[element] = 0;
     });
-  });
-  rmAttributes.sort((a, b) => attributeCount[b] - attributeCount[a]);
+    // 計算每個屬性出現的次數
+    rmResults.forEach((result) => {
+      const miningResults = result.miningResults;
+      miningResults.forEach((miningResult) => {
+        if (miningResult.attribute in attributeCount) {
+          attributeCount[miningResult.attribute]++;
+        }
+      });
+    });
+    rmAttributes.sort((a, b) => attributeCount[b] - attributeCount[a]);
+  }
 
   let rating0count = 0;
   if (rmRatings) {
