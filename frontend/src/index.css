@@ -15,8 +15,7 @@
   --content-background-color: #f9f9f9;
   --title-color: #358600;
   --tips-color: #d0fcff;
-
-  /* #FF495C */
+  --accent-color: #ff495c;
 }
 
 body {

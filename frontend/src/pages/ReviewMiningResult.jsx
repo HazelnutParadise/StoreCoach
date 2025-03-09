@@ -10,8 +10,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const navigate = useNavigate();
   const { dataUUID } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [result, setResult] =
-    useState(/*{
+  const [result, setResult] = useState(/*{
     storeName: "好旺來餐廳",
     attributes: [
       "餐點美味度",
@@ -22,9 +21,47 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       "精緻度",
       "cp值",
     ],
+    tTest: {
+      餐點美味度: {
+        pValue: 0.1,
+        tValue: 5.2,
+        df: 10,
+      },
+      價格: {
+        pValue: 0.25,
+        tValue: 5.2,
+        df: 10,
+      },
+      環境: {
+        pValue: 0.0033,
+        tValue: 5.2,
+        df: 10,
+      },
+      服務: {
+        pValue: 0.0001,
+        tValue: 5.2,
+        df: 10,
+      },
+      衛生: {
+        pValue: 0.0001,
+        tValue: 5.2,
+        df: 10,
+      },
+      精緻度: {
+        pValue: 0.0001,
+        tValue: 5.2,
+        df: 10,
+      },
+      cp值: {
+        pValue: 0.0001,
+        tValue: 5.2,
+        df: 10,
+      },
+    },
     results: [
       {
         reviewContent: "這家店的餐點很好吃，價格也很實惠。",
+        reviewRating: 5,
         miningResults: [
           {
             attribute: "餐點美味度",
@@ -38,6 +75,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "環境不錯，服務也很好。",
+        reviewRating: 4,
         miningResults: [
           {
             attribute: "環境",
@@ -51,6 +89,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "這家店的態度很差，也不好吃。",
+        reviewRating: 1,
         miningResults: [
           {
             attribute: "餐點美味度",
@@ -64,6 +103,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "so disgusting",
+        reviewRating: 1,
         miningResults: [
           {
             attribute: "餐點美味度",
@@ -73,6 +113,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "drinks are too expensive",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -82,6 +123,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "價格偏高，但是餐點很美味。",
+        reviewRating: 4,
         miningResults: [
           {
             attribute: "餐點美味度",
@@ -95,6 +137,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -109,6 +152,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
 
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -122,6 +166,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -135,6 +180,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -148,6 +194,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -161,6 +208,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -174,6 +222,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -187,6 +236,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -200,6 +250,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -217,6 +268,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -238,6 +290,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       },
       {
         reviewContent: "不衛生，價格也不便宜。",
+        reviewRating: 2,
         miningResults: [
           {
             attribute: "價格",
@@ -261,7 +314,8 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmResults = result?.results;
   let rmSummary = result?.summary;
   const rmTimestamp = result?.timestamp;
-  const rmTtest = result?.ttest;
+  const rmRatings = result?.results.map((r) => r.reviewRating);
+  const rmTtest = result?.tTest;
 
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 
@@ -358,9 +412,35 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                 />
               </div>
             </div>
+            {rmRatings ? (
+              <div className="div3" style={{ width: "100%" }}>
+                <div className="card rm-card">
+                  <h3>顧客評分分布</h3>
+                  <div className="rating-container">
+                    <div className="rating-box">
+                      <h4>
+                        平均評分：
+                        {(
+                          rmRatings.reduce((a, b) => a + b, 0) /
+                          rmRatings.length
+                        ).toFixed(2)}
+                      </h4>
+                    </div>
+                    <div className="rating-box">
+                      <h4>最高評分：{Math.max(...rmRatings)}</h4>
+                    </div>
+                    <div className="rating-box">
+                      <h4>最低評分：{Math.min(...rmRatings)}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
             {rmTtest ? (
-              <div>
-                <RmTtest rmTtest={rmTtest} />
+              <div className="ttest-box card rm-card">
+                <RmTtest rmResults={rmResults} rmTtest={rmTtest} />
               </div>
             ) : (
               ""

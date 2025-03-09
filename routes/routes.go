@@ -58,6 +58,7 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 		var err error
 		result, err = app.HandleReviewMining(dataUUID)
 		if err != nil {
+			log.Println(err)
 			if err.Error() == "data not found" {
 				c.JSON(404, gin.H{
 					"message": "Data not found",
