@@ -72,7 +72,9 @@ h3 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 160px;
+  min-width: fit-content;
+  flex:1;
+  flex-wrap: wrap;
 }
 
 .summary-box {
