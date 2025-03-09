@@ -2,19 +2,7 @@ import { Bar } from "react-chartjs-2";
 import ChartStyle from "./ChartStyle";
 
 const RmAttributesBarChart = ({ rmAttributes, rmResults }) => {
-  const attributesCount = {};
-  rmResults.forEach((result) => {
-    result.miningResults.forEach((miningResult) => {
-      if (miningResult.attribute in attributesCount) {
-        attributesCount[miningResult.attribute]++;
-      } else {
-        attributesCount[miningResult.attribute] = 1;
-      }
-    });
-  });
-  const sortedAttributes = [...rmAttributes].sort(
-    (a, b) => attributesCount[b] - attributesCount[a]
-  );
+  const sortedAttributes = rmAttributes;
   const top5Attributes = sortedAttributes.slice(0, 5);
   const positiveCount = {};
   const negativeCount = {};

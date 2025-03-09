@@ -6,13 +6,12 @@ import ChartStyle from "./ChartStyle";
 Chart.register(ChartDataLabels);
 
 const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
-  const results = rmResults;
   const attributeTimes = {};
   rmAttributes.forEach((element) => {
     attributeTimes[element] = 0;
   });
 
-  results.forEach((result) => {
+  rmResults.forEach((result) => {
     const miningResults = result.miningResults;
     miningResults.forEach((miningResult) => {
       if (miningResult.attribute in attributeTimes) {

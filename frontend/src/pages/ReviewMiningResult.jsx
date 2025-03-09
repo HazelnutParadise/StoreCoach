@@ -10,8 +10,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const navigate = useNavigate();
   const { dataUUID } = useParams();
   const [isLoading, setIsLoading] = useState();
-  const [result, setResult] =
-    useState({
+  const [result, setResult] = useState({
     storeName: "好旺來餐廳",
     attributes: [
       "餐點美味度",
@@ -318,6 +317,21 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   let rmRatings = result?.results.map((r) => r.reviewRating);
   const rmTtest = result?.tTest;
 
+  let attributeCount = {};
+  rmAttributes.forEach((element) => {
+    attributeCount[element] = 0;
+  });
+  // 計算每個屬性出現的次數
+  rmResults.forEach((result) => {
+    const miningResults = result.miningResults;
+    miningResults.forEach((miningResult) => {
+      if (miningResult.attribute in attributeCount) {
+        attributeCount[miningResult.attribute]++;
+      }
+    });
+  });
+  rmAttributes.sort((a, b) => attributeCount[b] - attributeCount[a]);
+
   let rating0count = 0;
   if (rmRatings) {
     rmRatings.forEach((r) => {
@@ -449,7 +463,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             )}
             {rmTtest ? (
               <div className="ttest-box card rm-card">
-                <RmTtest rmResults={rmResults} rmTtest={rmTtest} />
+                <RmTtest rmAttributes={rmAttributes} rmTtest={rmTtest} />
               </div>
             ) : (
               ""
