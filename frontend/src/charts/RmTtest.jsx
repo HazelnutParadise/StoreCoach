@@ -13,7 +13,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
       }
     });
   });
-  attributes.sort((a, b) => attributeCount[b] - attributeCount[a]).slice(0, 5);
+  attributes=attributes.sort((a, b) => attributeCount[b] - attributeCount[a]).slice(0, 5);
   return (
     <>
       <h3>前五大屬性對顧客評分影響的顯著性（T檢定p值，顯著水準=0.05）</h3>
