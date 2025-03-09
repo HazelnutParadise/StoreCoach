@@ -1,12 +1,15 @@
 const RmTtest = ({ rmResults, rmTtest }) => {
   let attributes = Object.keys(rmTtest);
   let attributeCount = {};
+  attributes.forEach((element) => {
+    attributeCount[element] = 0;
+  });
   // 計算每個屬性出現的次數
   rmResults.forEach((result) => {
-    result.miningResults.forEach((miningResult) => {
-      if (attributes.includes(miningResult.attribute)) {
-        attributeCount[miningResult.attribute] =
-          (attributeCount[miningResult.attribute] || 0) + 1;
+    const miningResults = result.miningResults;
+    miningResults.forEach((miningResult) => {
+      if (miningResult.attribute in attributeTimes) {
+        attributeCount[miningResult.attribute]++;
       }
     });
   });
