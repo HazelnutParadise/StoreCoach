@@ -15,7 +15,6 @@ import ReviewsInput from "./components/ReviewsInput";
 import ReviewMiningResult from "./pages/ReviewMiningResult";
 import PageNotFound from "./pages/404";
 import "./App.css";
-import TextAD from "./components/TextAD";
 
 const App = () => {
   ChartJS.register(
@@ -96,12 +95,12 @@ const App = () => {
   return (
     <>
       <TopBar />
+      <div id="div-onead-draft"></div>
       <Routes>
         <Route
           path="/"
           element={
             <div className="container">
-              <TextAD />
               <div className="card">
                 <h2>AI 評論探勘</h2>
                 <br />
@@ -153,7 +152,7 @@ const App = () => {
                 <a
                   target="_blank"
                   href="https://github.com/HazelnutParadise/StoreCoach"
-                  style={{wordBreak: "break-all"}}
+                  style={{ wordBreak: "break-all" }}
                 >
                   https://github.com/HazelnutParadise/StoreCoach
                 </a>
