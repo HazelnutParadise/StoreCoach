@@ -11,7 +11,7 @@ const TopBar = () => (
       />
       <h2 className="title">StoreCoach 商店教練</h2>
     </div>
-    <div id="Pistachio-Announcement"></div>
+    {/* <div id="Pistachio-Announcement" style={{zIndex: 99999}}></div> */}
   </div>
 );
 
