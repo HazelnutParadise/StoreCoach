@@ -12,8 +12,10 @@ const RmAttributesBarChart = ({ rmAttributes, rmResults }) => {
       }
     });
   });
-  rmAttributes.sort((a, b) => attributesCount[b] - attributesCount[a]);
-  const top5Attributes = rmAttributes.slice(0, 5);
+  const sortedAttributes = [...rmAttributes].sort(
+    (a, b) => attributesCount[b] - attributesCount[a]
+  );
+  const top5Attributes = sortedAttributes.slice(0, 5);
   const positiveCount = {};
   const negativeCount = {};
   const neutralCount = {};

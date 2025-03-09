@@ -21,7 +21,7 @@ var HTMLfile []byte
 //go:embed frontend/dist/assets/*
 var AssetsDir embed.FS
 
-const DevMode = false
+const DevMode = true
 
 func init() {
 	err := godotenv.Load("StoreCoach.env")

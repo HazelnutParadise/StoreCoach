@@ -27,16 +27,24 @@ const RmTtest = ({ rmResults, rmTtest }) => {
             >
               {attribute}
             </h4>
-            <span style={{ fontSize: "0.85rem" }}>
-              {rmTtest[attribute].pValue}
-            </span>
-            <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
-              {rmTtest[attribute].pValue < 0.05 ? (
-                <span style={{ color: " var(--accent-color)" }}>顯著</span>
-              ) : (
-                <span>不顯著</span>
-              )}
-            </span>
+            {rmTtest[attribute].pValue === 0 &&
+            rmTtest[attribute].tValue === 0 &&
+            rmTtest[attribute].df === 0 ? (
+              <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>無資料</span>
+            ) : (
+              <>
+                <span style={{ fontSize: "0.85rem" }}>
+                  {rmTtest[attribute].pValue}
+                </span>
+                <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
+                  {rmTtest[attribute].pValue < 0.05 ? (
+                    <span style={{ color: " var(--accent-color)" }}>顯著</span>
+                  ) : (
+                    <span>不顯著</span>
+                  )}
+                </span>
+              </>
+            )}
           </div>
         ))}
       </div>

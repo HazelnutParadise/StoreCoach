@@ -10,7 +10,8 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const navigate = useNavigate();
   const { dataUUID } = useParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [result, setResult] = useState(/*{
+  const [result, setResult] =
+    useState(/*{
     storeName: "好旺來餐廳",
     attributes: [
       "餐點美味度",
@@ -314,8 +315,16 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmResults = result?.results;
   let rmSummary = result?.summary;
   const rmTimestamp = result?.timestamp;
-  const rmRatings = result?.results.map((r) => r.reviewRating);
+  let rmRatings = result?.results.map((r) => r.reviewRating);
   const rmTtest = result?.tTest;
+
+  let rating0count = 0;
+  if (rmRatings) {
+    rmRatings.forEach((r) => {
+      if (r === 0.0) rating0count++;
+    });
+    if (rating0count === rmRatings.length) rmRatings = null;
+  }
 
   if (rmSummary) rmSummary = rmSummary.replace(/\n/g, "<br />");
 

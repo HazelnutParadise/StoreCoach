@@ -1,6 +1,7 @@
 package app
 
 import (
+	"math"
 	"math/rand"
 	"time"
 
@@ -86,8 +87,8 @@ func generateAttributesFromReviews(storeName string, productName string, reviews
 	var allAttributes []string
 	// **迭代 3 次以提升精準度**
 	// for range 3 {
-	shuffledReviews := randomSort(reviews)           // **隨機排序評論**
-	chunks := splitIntoChunks(shuffledReviews, 1000) // **分塊處理評論**
+	shuffledReviews := randomSort(reviews)         // **隨機排序評論**
+	chunks := splitIntoChunks(shuffledReviews, 50) // **分塊處理評論**
 	for _, chunk := range chunks {
 		var chunkedReviewsStr string
 		for _, review := range chunk {
@@ -205,6 +206,15 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 
 func reviewsAttributeTTTest(attributes []string, miningResults []SingleReviewMiningResult) map[string]ReviewMiningAttributeTTestResult {
 	// TODO: t-test
+	count0ratings := 0
+	for _, result := range miningResults {
+		if result.ReviewRating == 0 {
+			count0ratings++
+		}
+	}
+	if count0ratings == len(miningResults) {
+		return nil
+	}
 	var statResults = map[string]ReviewMiningAttributeTTestResult{}
 	for _, attribute := range attributes {
 		group0 := insyra.NewDataList()
@@ -220,6 +230,12 @@ func reviewsAttributeTTTest(attributes []string, miningResults []SingleReviewMin
 			group0.Append(result.ReviewRating)
 		}
 		result := stats.TwoSampleTTest(group0, group1, false)
+		if result == nil {
+			continue
+		}
+		if math.IsNaN(result.TValue) || math.IsNaN(result.PValue) || math.IsNaN(float64(result.Df)) {
+			continue
+		}
 		statResults[attribute] = ReviewMiningAttributeTTestResult{
 			TValue: result.TValue,
 			PValue: result.PValue,

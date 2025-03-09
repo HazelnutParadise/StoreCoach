@@ -42,6 +42,7 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 				}
 			}
 		}
+		log.Printf("Received review data: %+v", reviewData)
 		dataUUID := app.ReviewMining_SaveToBuf(reviewData)
 		c.JSON(200, gin.H{
 			"dataUUID": dataUUID,
