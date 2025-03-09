@@ -8,7 +8,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
   rmResults.forEach((result) => {
     const miningResults = result.miningResults;
     miningResults.forEach((miningResult) => {
-      if (miningResult.attribute in attributeTimes) {
+      if (miningResult.attribute in attributeCount) {
         attributeCount[miningResult.attribute]++;
       }
     });
