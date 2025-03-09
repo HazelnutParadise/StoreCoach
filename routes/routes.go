@@ -80,5 +80,6 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	r.StaticFS("/assets", assets)
 	r.NoRoute(func(c *gin.Context) {
 		c.Writer.Write(indexHtml)
+		c.Data(200, "text/html", indexHtml)
 	})
 }
