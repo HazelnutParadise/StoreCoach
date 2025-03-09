@@ -349,29 +349,58 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   }, [setPageTitle, isLoading]);
 
   useEffect(() => {
-    fetch(`/api/review-mining/${dataUUID}`, {
-      headers: {
-        "Cache-Control": "no-cache",
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((resJson) => {
-        if (!resJson.storeName)
-          throw new Error("No data returned from the server");
-        console.table(resJson);
-        setResult(resJson);
-      })
-      .catch((err) => {
-        alert("Failed to fetch data");
-        console.error(err);
-        navigate("/");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    let isMounted = true;
+
+    const fetchData = async () => {
+      const failedTimeout = 10 * 60 * 1000;
+      const startTime = new Date().getTime();
+
+      try {
+        while (isMounted) {
+          try {
+            const res = await fetch(`/api/review-mining/${dataUUID}`, {
+              headers: {
+                "Cache-Control": "no-cache",
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+            });
+            const resJson = await res.json();
+
+            if (!resJson.storeName) {
+              throw new Error("No data returned from the server");
+            }
+
+            if (isMounted) {
+              setResult(resJson);
+              break;
+            }
+          } catch (err) {
+            const nowTime = new Date().getTime();
+            if (nowTime - startTime > failedTimeout) {
+              if (isMounted) {
+                alert("Failed to fetch data");
+                console.error(err);
+                navigate("/");
+              }
+              break;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [dataUUID, navigate]);
   if (isLoading) {
     return <FullScreenLoader />;
   } else if (result) {
