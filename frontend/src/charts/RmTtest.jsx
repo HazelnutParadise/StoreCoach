@@ -39,7 +39,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
                   {rmTtest[attribute].pValue.toFixed(4)}
                 </span>
                 <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
-                  {rmTtest[attribute].pValue < 0.05 ? (
+                  {rmTtest[attribute].pValue <= 0.05 ? (
                     <span style={{ color: " var(--accent-color)" }}>顯著</span>
                   ) : (
                     <span>不顯著</span>
