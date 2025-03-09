@@ -1,17 +1,16 @@
 const RmTtest = ({ rmResults, rmTtest }) => {
   let attributes = Object.keys(rmTtest);
   let attributeCount = {};
+  // 計算每個屬性出現的次數
   rmResults.forEach((result) => {
     result.miningResults.forEach((miningResult) => {
       if (attributes.includes(miningResult.attribute)) {
         attributeCount[miningResult.attribute] =
-          attributeCount[miningResult.attribute] + 1 || 1;
+          (attributeCount[miningResult.attribute] || 0) + 1;
       }
     });
   });
-  // todo
-  attributes.sort((a, b) => attributeCount[b] - attributeCount[a]);
-  attributes = attributes.slice(0, 5);
+  attributes.sort((a, b) => attributeCount[b] - attributeCount[a]).slice(0, 5);
   return (
     <>
       <h3>前五大屬性對顧客評分影響的顯著性（T檢定p值，顯著水準=0.05）</h3>
@@ -34,7 +33,7 @@ const RmTtest = ({ rmResults, rmTtest }) => {
             ) : (
               <>
                 <span style={{ fontSize: "0.85rem" }}>
-                  {(rmTtest[attribute].pValue).toFixed(4)}
+                  {rmTtest[attribute].pValue.toFixed(4)}
                 </span>
                 <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
                   {rmTtest[attribute].pValue < 0.05 ? (
