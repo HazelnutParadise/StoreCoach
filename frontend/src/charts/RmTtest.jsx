@@ -16,10 +16,10 @@ const RmTtest = ({ rmAttributes, rmTtest }) => {
             >
               {attribute}
             </h4>
-            {(rmTtest[attribute].pValue < 0.05 &&
+            {!rmTtest[attribute] ||
+            (rmTtest[attribute].pValue < 0.05 &&
               rmTtest[attribute].tValue < 0.05 &&
-              rmTtest[attribute].df === 0) ||
-            !rmTtest[attribute] ? (
+              rmTtest[attribute].df === 0) ? (
               <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>無資料</span>
             ) : (
               <>

@@ -59,8 +59,8 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 		results = append(results, *result)
 	}
 
-	// TODO: t-test
-	ttest := reviewsAttributeTTTest(attributes, results)
+	// **進行 T 檢定**
+	ttest := reviewsAttributeTTest(attributes, results)
 
 	reviewMiningStruct := ReviewMiningStruct{
 		StoreName:   storeName,
@@ -213,8 +213,7 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 	return nil
 }
 
-func reviewsAttributeTTTest(attributes []string, miningResults []SingleReviewMiningResult) map[string]ReviewMiningAttributeTTestResult {
-	// TODO: t-test
+func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMiningResult) map[string]ReviewMiningAttributeTTestResult {
 	count0ratings := 0
 	for _, result := range miningResults {
 		if result.ReviewRating == 0 {
