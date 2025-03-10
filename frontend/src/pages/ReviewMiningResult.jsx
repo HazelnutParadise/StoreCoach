@@ -466,26 +466,83 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                   <h3>顧客評分分布</h3>
                   <div className="rating-container">
                     <div className="rating-box">
-                      <h4>
-                        平均評分：
+                      <h4
+                        style={{
+                          padding: 0,
+                          margin: 0,
+                          fontSize: "calc(0.9rem + 0.7vw)",
+                        }}
+                      >
+                        最高評分
+                      </h4>
+                      <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
+                        {Math.max(...rmRatings)}
+                      </span>
+                    </div>
+                    <div className="rating-box">
+                      <h4
+                        style={{
+                          padding: 0,
+                          margin: 0,
+                          fontSize: "calc(0.9rem + 0.7vw)",
+                        }}
+                      >
+                        評分中位數
+                      </h4>
+                      <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
+                        {((arr) => {
+                          arr = arr.sort((a, b) => a - b);
+                          let median;
+                          if (arr.length % 2 === 0) {
+                            // 數目為偶數
+                            median =
+                              (arr[arr.length / 2] + arr[arr.length / 2 - 1]) /
+                              2;
+                          } else {
+                            // 數目為奇數
+                            median = arr[(arr.length - 1) / 2];
+                          }
+                          return median;
+                        })(rmRatings)}
+                      </span>
+                    </div>
+                    <div className="rating-box">
+                      <h4
+                        style={{
+                          padding: 0,
+                          margin: 0,
+                          fontSize: "calc(0.9rem + 0.7vw)",
+                        }}
+                      >
+                        最低評分
+                      </h4>
+                      <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
+                        {Math.min(...rmRatings)}
+                      </span>
+                    </div>
+                    <div className="rating-box">
+                      <h4
+                        style={{
+                          padding: 0,
+                          margin: 0,
+                          fontSize: "calc(0.9rem + 0.7vw)",
+                        }}
+                      >
+                        平均評分
+                      </h4>
+                      <span style={{ fontSize: "calc(1.1rem + 0.7vw)" }}>
                         {(
                           rmRatings.reduce((a, b) => a + b, 0) /
                           rmRatings.length
                         ).toFixed(2)}
-                      </h4>
-                    </div>
-                    <div className="rating-box">
-                      <h4>最高評分：{Math.max(...rmRatings)}</h4>
-                    </div>
-                    <div className="rating-box">
-                      <h4>最低評分：{Math.min(...rmRatings)}</h4>
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             ) : null}
             {rmTtest ? (
-              <div className="ttest-box card rm-card">
+              <div className="card rm-card">
                 <RmTtest rmAttributes={rmAttributes} rmTtest={rmTtest} />
               </div>
             ) : null}
