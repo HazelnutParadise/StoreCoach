@@ -85,52 +85,52 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 
 func generateAttributesFromReviews(storeName string, productName string, reviews []string) ([]string, error) {
 	var allAttributes []string
-	// **迭代 3 次以提升精準度**
-	// for range 3 {
-	shuffledReviews := randomSort(reviews)         // **隨機排序評論**
-	chunks := splitIntoChunks(shuffledReviews, 50) // **分塊處理評論**
-	for _, chunk := range chunks {
-		var chunkedReviewsStr string
-		for _, review := range chunk {
-			chunkedReviewsStr += "  - 「" + review + "」\n"
-		}
-		beginningPrompt := "您是全球頂尖的資料探勘專家，正在幫名為「" + storeName + "」的店家或機構"
-		if productName != "" {
-			beginningPrompt += "的「" + productName + "」（一項產品或服務）"
-		}
-		prompt := beginningPrompt + "製作精準的分析報告。讓我們一步一步思考來捕捉評論中的各個屬性:\n" +
-			"1. 首先，仔細閱讀下列評論，並從中歸納出能夠完整反映評論主旨的各項具體屬性（注意：單一評論可能同時涉及多個屬性）:\n" +
-			chunkedReviewsStr +
-			"2. 屬性的種類包括但不限於：\n" +
-			"  - 屬性功能(例如：材質、顏色、價格、美感、保證、速度等)\n" +
-			"  - 利益與用途(例如：安全、便利、易用性、銳利、耐用、效率、效能、性價比等)\n" +
-			"  - 品牌個性(例如：浪漫、品味、歡樂、典雅、創新等)\n" +
-			"  - 形象(與特定品牌相關的形象或印象)\n" +
-			"3. 務必使用精確、專業且具體的詞彙描述每個屬性，確保捕捉評論中的所有關鍵意涵。\n" +
-			"4. 屬性必須具備分類上的意義，不能只針對個別評論而設定。\n" +
-			"5. 僅選取評論中有明確提及的屬性，切勿自行添加評論中未出現的屬性，並且僅回傳屬性名稱，不附加括號內說明或註解。\n" +
-			"6. 參考以下已識別的屬性，並根據評論內容進行調整、增加或合併，以確保結果準確反映評論：\n" +
-			"  `" + conv.ToString(allAttributes) + "`\n" +
-			"7. 最後，以 JSON 陣列格式回傳結果，格式：`[\"屬性1\", \"屬性2\", \"屬性3\"]`\n" +
-			"8. 只回傳 JSON 陣列，不要回傳其他文字。\n" +
-			"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
+	// **迭代 8 次以提升精準度**
+	for range 8 {
+		shuffledReviews := randomSort(reviews)         // **隨機排序評論**
+		chunks := splitIntoChunks(shuffledReviews, 50) // **分塊處理評論**
+		for _, chunk := range chunks {
+			var chunkedReviewsStr string
+			for _, review := range chunk {
+				chunkedReviewsStr += "  - 「" + review + "」\n"
+			}
+			beginningPrompt := "您是全球頂尖的資料探勘專家，正在幫名為「" + storeName + "」的店家或機構"
+			if productName != "" {
+				beginningPrompt += "的「" + productName + "」（一項產品或服務）"
+			}
+			prompt := beginningPrompt + "製作精準的分析報告。讓我們一步一步思考來捕捉評論中的各個屬性:\n" +
+				"1. 首先，仔細閱讀下列評論，並從中歸納出能夠完整反映評論主旨的各項具體屬性（注意：單一評論可能同時涉及多個屬性）:\n" +
+				chunkedReviewsStr +
+				"2. 屬性的種類包括但不限於：\n" +
+				"  - 屬性功能(例如：材質、顏色、價格、美感、保證、速度等)\n" +
+				"  - 利益與用途(例如：安全、便利、易用性、銳利、耐用、效率、效能、性價比等)\n" +
+				"  - 品牌個性(例如：浪漫、品味、歡樂、典雅、創新等)\n" +
+				"  - 形象(與特定品牌相關的形象或印象)\n" +
+				"3. 務必使用精確、專業且具體的詞彙描述每個屬性，確保捕捉評論中的所有關鍵意涵。\n" +
+				"4. 屬性必須具備分類上的意義，不能只針對個別評論而設定。\n" +
+				"5. 僅選取評論中有明確提及的屬性，切勿自行添加評論中未出現的屬性，並且僅回傳屬性名稱，不附加括號內說明或註解。\n" +
+				"6. 參考以下已識別的屬性，並根據評論內容進行調整、增加或合併，以確保結果準確反映評論：\n" +
+				"  `" + conv.ToString(allAttributes) + "`\n" +
+				"7. 最後，以 JSON 陣列格式回傳結果，格式：`[\"屬性1\", \"屬性2\", \"屬性3\"]`\n" +
+				"8. 只回傳 JSON 陣列，不要回傳其他文字。\n" +
+				"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
-		resp, err := CallLLM(prompt, 0.1, LLM_LocalGemma2_9b)
-		if err != nil {
-			return nil, err
-		}
+			resp, err := CallLLM(prompt, 0.1, LLM_LocalGemma2_9b)
+			if err != nil {
+				return nil, err
+			}
 
-		resSlice := make([]string, 0)
-		// **解析 LLM 輸出**
-		err = Unmarshal_LLM_JSON_Response(resp, &resSlice)
-		if err != nil {
-			return nil, err
-		}
+			resSlice := make([]string, 0)
+			// **解析 LLM 輸出**
+			err = Unmarshal_LLM_JSON_Response(resp, &resSlice)
+			if err != nil {
+				return nil, err
+			}
 
-		// **合併新屬性，確保沒有重複**
-		allAttributes = mergeSlicesUnique(allAttributes, resSlice)
+			// **合併新屬性，確保沒有重複**
+			allAttributes = mergeSlicesUnique(allAttributes, resSlice)
+		}
 	}
-	// }
 
 	return allAttributes, nil
 }
