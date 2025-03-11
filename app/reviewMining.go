@@ -237,7 +237,16 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 			}
 			group0.Append(result.ReviewRating)
 		}
-		result := stats.TwoSampleTTest(group0, group1, false)
+		var varEqual = false
+		ftest := stats.FTestForVarianceEquality(group0, group1)
+		if ftest != nil {
+			if ftest.PValue <= 0.05 {
+				varEqual = false
+			} else {
+				varEqual = true
+			}
+		}
+		result := stats.TwoSampleTTest(group0, group1, varEqual)
 		if result == nil {
 			continue
 		}
