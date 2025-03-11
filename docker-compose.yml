@@ -4,6 +4,9 @@ services:
     ports:
       - "6868:8080"
     restart: unless-stopped
+    networks:
+      - ollama-net
+      - storecoach-net
   mongo:
     image: mongodb/mongodb-community-server:latest
     ports:
@@ -12,3 +15,11 @@ services:
       - /mnt/hdd0/storecoach/db:/data/db
     user: root
     restart: unless-stopped
+    networks:
+      - storecoach-net
+
+  networks:
+    storecoach-net:
+      external: false
+    ollama-net:
+      external: true

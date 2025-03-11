@@ -14,7 +14,7 @@ import (
 	"github.com/tmc/langchaingo/llms/ollama"
 )
 
-const ollamaServerURL = "http://ollamastack-ollama:11434"
+const ollamaServerURL = "http://ollama:11434"
 
 var (
 	llmLocalRequestInterval  time.Duration = 0 * time.Millisecond
