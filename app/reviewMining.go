@@ -238,6 +238,9 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 			group0.Append(result.ReviewRating)
 		}
 		var varEqual = false
+		if group0.Len() < 2 || group1.Len() < 2 {
+			continue // 略過這組數據
+		}
 		ftest := stats.FTestForVarianceEquality(group0, group1)
 		if ftest != nil {
 			if ftest.PValue <= 0.05 {
