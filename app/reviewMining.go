@@ -250,7 +250,7 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 		if result == nil {
 			continue
 		}
-		if math.IsNaN(result.TValue) || math.IsNaN(result.PValue) || math.IsNaN(float64(result.Df)) {
+		if math.IsNaN(result.TValue) || math.IsNaN(result.PValue) {
 			continue
 		}
 		statResults[attribute] = ReviewMiningAttributeTTestResult{
