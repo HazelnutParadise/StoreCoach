@@ -18,8 +18,8 @@ services:
     networks:
       - storecoach-net
 
-  networks:
-    storecoach-net:
-      external: false
-    ollama-net:
-      external: true
+networks:
+  storecoach-net:
+    external: false
+  ollama-net:
+    external: true
