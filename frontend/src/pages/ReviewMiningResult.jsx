@@ -308,7 +308,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmResults = result?.results;
   let rmSummary = result?.summary;
   const rmTimestamp = result?.timestamp;
-  let rmRatings = result?.results.map((r) => r.reviewRating);
+  let rmRatings = result?.results?.map((r) => r.reviewRating);
   const rmTtest = result?.tTest;
 
   let attributeCount = {};
@@ -318,11 +318,6 @@ const ReviewMiningResult = ({ setPageTitle }) => {
     });
     // 計算每個屬性出現的次數
     rmResults.forEach((result) => {
-      if(!result.miningResults) {
-        alert("找不到探勘結果，可能是評論資料沒有內容");
-        navigate("/");
-        return;
-      };
       const miningResults = result.miningResults;
       miningResults.forEach((miningResult) => {
         if (miningResult.attribute in attributeCount) {
