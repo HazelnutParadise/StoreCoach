@@ -318,6 +318,11 @@ const ReviewMiningResult = ({ setPageTitle }) => {
     });
     // 計算每個屬性出現的次數
     rmResults.forEach((result) => {
+      if(!result.miningResults) {
+        alert("找不到探勘結果，可能是評論資料沒有內容");
+        navigate("/");
+        return;
+      };
       const miningResults = result.miningResults;
       miningResults.forEach((miningResult) => {
         if (miningResult.attribute in attributeCount) {
