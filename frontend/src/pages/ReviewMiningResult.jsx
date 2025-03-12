@@ -313,6 +313,10 @@ const ReviewMiningResult = ({ setPageTitle }) => {
 
   let attributeCount = {};
   if (result) {
+    if(!rmAttributes) {
+      alert("探勘失敗，可能是評論資料中沒有內容");
+      navigate("/");
+    }
     rmAttributes.forEach((element) => {
       attributeCount[element] = 0;
     });
