@@ -85,8 +85,8 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 
 func generateAttributesFromReviews(storeName string, productName string, reviews []string) ([]string, error) {
 	var allAttributes []string
-	// **迭代 8 次以提升精準度**
-	for range 8 {
+	// **迭代 5 次以提升精準度**
+	for range 5 {
 		shuffledReviews := randomSort(reviews)         // **隨機排序評論**
 		chunks := splitIntoChunks(shuffledReviews, 50) // **分塊處理評論**
 		for _, chunk := range chunks {
