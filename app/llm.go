@@ -22,10 +22,10 @@ var (
 )
 
 var (
-	llmGeminiReqBuf          = insyra.NewDataList()
-	llmLocalGemma2_9b_ReqBuf = insyra.NewDataList()
+	llmGeminiReqBuf           = insyra.NewDataList()
+	llmLocalGemma3_12b_ReqBuf = insyra.NewDataList()
 )
-var llmReqBufs = []*insyra.DataList{llmGeminiReqBuf, llmLocalGemma2_9b_ReqBuf}
+var llmReqBufs = []*insyra.DataList{llmGeminiReqBuf, llmLocalGemma3_12b_ReqBuf}
 var llmRespBuf = sync.Map{}
 var llmErrBuf = sync.Map{}
 
@@ -38,7 +38,7 @@ type llmReq struct {
 
 const (
 	LLM_Gemini = iota
-	LLM_LocalGemma2_9b
+	LLM_LocalGemma3_12b
 )
 
 func init() {
@@ -75,8 +75,8 @@ func CallLLM(prompt string, temperature float64, model int) (string, error) {
 	switch model {
 	case LLM_Gemini:
 		llmGeminiReqBuf.InsertAt(0, req)
-	case LLM_LocalGemma2_9b:
-		llmLocalGemma2_9b_ReqBuf.InsertAt(0, req)
+	case LLM_LocalGemma3_12b:
+		llmLocalGemma3_12b_ReqBuf.InsertAt(0, req)
 	}
 	for {
 		if llmResp, ok := llmRespBuf.LoadAndDelete(reqUUID); ok {
@@ -109,10 +109,10 @@ func requestLLM(req llmReq) (string, error) {
 			return "", err
 		}
 		time.Sleep(llmGeminiRequestInterval / 2)
-	case LLM_LocalGemma2_9b:
+	case LLM_LocalGemma3_12b:
 		time.Sleep(llmLocalRequestInterval / 2)
 		ctx := context.Background()
-		llm, err := ollama.New(ollama.WithModel("gemma2:9b"), ollama.WithRunnerNumCtx(10240), ollama.WithServerURL(ollamaServerURL))
+		llm, err := ollama.New(ollama.WithModel("gemma3:12b"), ollama.WithRunnerNumCtx(128000), ollama.WithServerURL(ollamaServerURL))
 		if err != nil {
 			return "", err
 		}
