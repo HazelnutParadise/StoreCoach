@@ -313,7 +313,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
 
   let attributeCount = {};
   if (result) {
-    if(!rmAttributes) {
+    if (!rmAttributes) {
       alert("探勘失敗，可能是評論資料中沒有內容");
       navigate("/");
     }
@@ -356,8 +356,8 @@ const ReviewMiningResult = ({ setPageTitle }) => {
     let isMounted = true;
 
     const fetchData = async () => {
-      const failedTimeout = 10 * 60 * 1000;
-      const startTime = new Date().getTime();
+      // const failedTimeout = 10 * 60 * 1000;
+      // const startTime = new Date().getTime();
 
       try {
         while (isMounted) {
@@ -369,6 +369,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                 Accept: "application/json",
               },
             });
+            if (!res.body.json) continue;
             const resJson = await res.json();
 
             if (!resJson.storeName) {
@@ -380,16 +381,16 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               break;
             }
           } catch (err) {
-            const nowTime = new Date().getTime();
-            if (nowTime - startTime > failedTimeout) {
-              if (isMounted) {
-                alert("Failed to fetch data");
-                console.error(err);
-                navigate("/");
-              }
-              break;
+            // const nowTime = new Date().getTime();
+            // if (nowTime - startTime > failedTimeout) {
+            if (isMounted) {
+              alert("Failed to fetch data");
+              console.error(err);
+              navigate("/");
             }
-            await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+            break;
+            // }
+            // await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
           }
         }
       } finally {

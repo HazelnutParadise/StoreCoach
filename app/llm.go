@@ -104,6 +104,9 @@ func requestLLM(req llmReq) (string, error) {
 			googleai.WithDefaultModel("gemini-2.0-flash-lite"),
 			googleai.WithDefaultTemperature(req.temperature),
 		)
+		if err != nil {
+			return "", err
+		}
 		completion, err = llms.GenerateFromSinglePrompt(ctx, llm, req.prompt)
 		if err != nil {
 			return "", err

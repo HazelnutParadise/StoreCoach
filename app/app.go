@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/HazelnutParadise/insyra"
 	"github.com/google/uuid"
 	jsoniter "github.com/json-iterator/go"
 )
@@ -12,6 +13,7 @@ import (
 var json = jsoniter.ConfigFastest
 
 var ReviewMiningDataBuf sync.Map
+var IsMiningList = insyra.NewDataList()
 
 type ReviewData struct {
 	StoreName   string   `json:"storeName"`
@@ -57,6 +59,7 @@ func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error)
 		err = errors.New("data not found")
 		return nil, err
 	}
+	IsMiningList.Append(dataUUID)
 
 	reviewData := reviewDataAny.(ReviewData)
 	reviews := reviewData.Reviews
@@ -65,15 +68,13 @@ func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error)
 	ratings := reviewData.Ratings
 
 	result, err = ReviewMining(storeName, productName, reviews, ratings)
+	IsMiningList.DropAll(dataUUID)
 	return result, err
 }
 
 func splitIntoChunks[T any](slice []T, length int) (chunks [][]T) {
 	for i := 0; i < len(slice); i += length {
-		end := i + length
-		if end > len(slice) {
-			end = len(slice)
-		}
+		end := min(i+length, len(slice))
 		chunks = append(chunks, slice[i:end])
 	}
 	return chunks
