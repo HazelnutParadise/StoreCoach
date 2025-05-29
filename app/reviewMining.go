@@ -249,7 +249,7 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 				varEqual = true
 			}
 		}
-		result := stats.TwoSampleTTest(group0, group1, varEqual, 0.05)
+		result := stats.TwoSampleTTest(group0, group1, varEqual, 0.95)
 		if result == nil {
 			continue
 		}
