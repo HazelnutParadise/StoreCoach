@@ -8,7 +8,7 @@ RUN bun install --frozen-lockfile
 RUN bun run build
 
 # Backend build stage
-FROM golang:1.23-alpine AS backend
+FROM golang:1.24-alpine AS backend
 WORKDIR /app
 # 先複製前端構建結果
 COPY --from=frontend /app ./
