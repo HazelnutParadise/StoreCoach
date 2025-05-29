@@ -115,7 +115,7 @@ func generateAttributesFromReviews(storeName string, productName string, reviews
 				"8. 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 				"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
-			resp, err := CallLLM(prompt, 0.1, LLM_LocalGemma2_9b)
+			resp, err := CallLLM(prompt, 0.1, LLM_Local)
 			if err != nil {
 				return nil, err
 			}
@@ -150,7 +150,7 @@ func analyzeReview(storeName, productName string, review string, attributes []st
 		"- 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 		"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
-	resp, err := CallLLM(prompt, 0.1, LLM_LocalGemma2_9b)
+	resp, err := CallLLM(prompt, 0.1, LLM_Local)
 	if err != nil {
 		return nil, err
 	}
@@ -249,17 +249,17 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 				varEqual = true
 			}
 		}
-		result := stats.TwoSampleTTest(group0, group1, varEqual)
+		result := stats.TwoSampleTTest(group0, group1, varEqual, 0.05)
 		if result == nil {
 			continue
 		}
-		if math.IsNaN(result.TValue) || math.IsNaN(result.PValue) {
+		if math.IsNaN(result.Statistic) || math.IsNaN(result.PValue) {
 			continue
 		}
 		statResults[attribute] = ReviewMiningAttributeTTestResult{
-			TValue: result.TValue,
+			TValue: result.Statistic,
 			PValue: result.PValue,
-			Df:     result.Df,
+			Df:     int(*result.DF),
 		}
 	}
 	return statResults

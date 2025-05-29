@@ -3,7 +3,9 @@ const RmTtest = ({ rmAttributes, rmTtest }) => {
   attributes = attributes.slice(0, 5);
   return (
     <>
-      <h3>前五大屬性對顧客評分影響的顯著性（T檢定p值，顯著水準=0.05）</h3>
+      <h3>
+        前五大屬性對顧客評分影響的顯著性（獨立樣本t檢定p值，顯著水準=0.05）
+      </h3>
       <div className="ttest-container">
         {attributes.map((attribute) => (
           <div className="ttest-box">
