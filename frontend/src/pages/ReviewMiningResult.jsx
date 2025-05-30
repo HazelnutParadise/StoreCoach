@@ -370,7 +370,10 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               },
             });
             const resJson = await res.json();
-            if (!resJson) continue;
+            if (!resJson) {
+              await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+              continue;
+            }
 
             if (!resJson.storeName) {
               throw new Error("No data returned from the server");
@@ -390,7 +393,6 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             }
             break;
             // }
-            // await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
           }
         }
       } finally {
