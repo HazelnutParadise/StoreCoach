@@ -369,8 +369,8 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                 Accept: "application/json",
               },
             });
-            if (!res.body.json) continue;
             const resJson = await res.json();
+            if (!resJson) continue;
 
             if (!resJson.storeName) {
               throw new Error("No data returned from the server");
