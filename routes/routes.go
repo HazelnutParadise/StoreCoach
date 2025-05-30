@@ -51,30 +51,32 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
 		log.Printf("Received request for dataUUID: %s", dataUUID)
+
+		// 先檢查資料庫是否有結果
 		result, err := database.FindReviewMiningResult(dataUUID)
 		if result != nil {
 			c.JSON(200, result)
 			return
 		} else if err == nil {
+			// 資料存在但還沒處理完成，回傳 nil
 			c.JSON(200, nil)
 			return
 		}
 
-		result, err = app.HandleReviewMining(dataUUID)
-		if err != nil {
-			log.Println(err)
-			if err.Error() == "data not found" {
-				c.JSON(404, gin.H{
-					"message": "Data not found",
-				})
-				return
+		// 非同步開始處理，立即回傳 nil
+		go func() {
+			log.Printf("Starting async processing for dataUUID: %s", dataUUID)
+			result, err := app.HandleReviewMining(dataUUID)
+			if err != nil {
+				log.Printf("Error processing dataUUID %s: %v", dataUUID, err)
+			} else {
+				database.SaveReviewMiningResult(dataUUID, result)
+				log.Printf("Completed processing for dataUUID: %s", dataUUID)
 			}
-			c.JSON(500, gin.H{
-				"message": "Internal Server Error",
-			})
-		}
-		database.SaveReviewMiningResult(dataUUID, result)
-		c.JSON(200, result)
+		}()
+
+		// 立即回傳 nil，表示處理已開始
+		c.JSON(200, nil)
 	})
 
 	r.GET("/", func(c *gin.Context) {
