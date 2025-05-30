@@ -370,7 +370,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               },
             });
             const resJson = await res.json();
-            if (!resJson) {
+            if (resJson === null) {
               await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
               continue;
             }
