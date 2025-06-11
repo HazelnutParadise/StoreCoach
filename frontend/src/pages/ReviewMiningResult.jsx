@@ -432,6 +432,9 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                   產品名稱：<span>{rmProductName}</span>
                 </h3>
               ) : null}
+              <h4>
+                評論筆數：<span>{rmResults?.length || 0}</span>
+              </h4>
             </div>
 
             <h4>
