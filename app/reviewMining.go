@@ -11,14 +11,15 @@ import (
 )
 
 type ReviewMiningStruct struct {
-	DataUUID    string                                      `bson:"dataUUID"`
-	StoreName   string                                      `json:"storeName" bson:"storeName"`
-	ProductName string                                      `json:"productName" bson:"productName"`
-	Attributes  []string                                    `json:"attributes" bson:"attributes"`
-	Results     []SingleReviewMiningResult                  `json:"results" bson:"results"`
-	TTest       map[string]ReviewMiningAttributeTTestResult `json:"tTest" bson:"tTest"`
-	Summary     string                                      `json:"summary" bson:"summary"`
-	Timestamp   int64                                       `json:"timestamp" bson:"timestamp"`
+	DataUUID               string                                      `bson:"dataUUID"`
+	StoreName              string                                      `json:"storeName" bson:"storeName"`
+	ProductName            string                                      `json:"productName" bson:"productName"`
+	Attributes             []string                                    `json:"attributes" bson:"attributes"`
+	Results                []SingleReviewMiningResult                  `json:"results" bson:"results"`
+	AverageAttributeScores map[string]float64                          `json:"averageAttributeScores" bson:"averageAttributeScores"`
+	TTest                  map[string]ReviewMiningAttributeTTestResult `json:"tTest" bson:"tTest"`
+	Summary                string                                      `json:"summary" bson:"summary"`
+	Timestamp              int64                                       `json:"timestamp" bson:"timestamp"`
 }
 
 type SingleReviewMiningResult struct {
@@ -27,6 +28,7 @@ type SingleReviewMiningResult struct {
 	MiningResults []struct {
 		Attribute string `json:"attribute" bson:"attribute"`
 		Sentiment string `json:"sentiment" bson:"sentiment"`
+		Score     uint8  `json:"score" bson:"score"`
 	} `json:"miningResults" bson:"miningResults"`
 }
 
@@ -59,15 +61,22 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 		results = append(results, *result)
 	}
 
+	// **計算屬性平均分數**
+	averageAttributeScores := calculateAttributeAverageScores(results)
+
+	// todo：迴歸分析
+	regressAverageAttributeScoresAndRatings(results)
+
 	// **進行 T 檢定**
 	ttest := reviewsAttributeTTest(attributes, results)
 
 	reviewMiningStruct := ReviewMiningStruct{
-		StoreName:   storeName,
-		ProductName: productName,
-		Attributes:  attributes,
-		Results:     results,
-		TTest:       ttest,
+		StoreName:              storeName,
+		ProductName:            productName,
+		Attributes:             attributes,
+		Results:                results,
+		AverageAttributeScores: averageAttributeScores,
+		TTest:                  ttest,
 	}
 
 	// **為評論分析結果添加摘要**
@@ -141,12 +150,27 @@ func analyzeReview(storeName, productName string, review string, attributes []st
 	if productName != "" {
 		beginningPrompt += "的「" + productName + "」（一項產品或服務）"
 	}
-	prompt := beginningPrompt + "的評論。請根據以下評論，找出涉及的屬性，並對每個屬性進行情緒分類。\n" +
-		"評論：「" + review + "」\n" +
-		"- 請根據已識別的屬性，找出評論涉及的類別，並對每個類別進行情緒分類。\n" +
-		"- 全部的屬性：`" + conv.ToString(attributes) + "`\n" +
-		"- 情緒分類包括：`" + conv.ToString(sentimentClassification) + "`。\n" +
-		"- 回傳 JSON 陣列，格式：`[{\"attribute\": \"屬性1\", \"sentiment\": \"positive\"}, {\"attribute\": \"屬性2\", \"sentiment\": \"negative\"}]`\n" +
+	prompt := beginningPrompt + "的評論。\n" +
+		"評論：「" + review + "」\n\n" +
+		"請根據以上評論，找出涉及的屬性，並確實完成以下兩項任務：\n" +
+		"1. 對每個屬性進行情緒分類。\n" +
+		"	- 請根據已識別的屬性，找出評論涉及的類別，並對每個類別進行情緒分類。\n" +
+		"	- 全部的屬性：`" + conv.ToString(attributes) + "`\n" +
+		"	- 情緒分類包括：`" + conv.ToString(sentimentClassification) + "`。\n" +
+		"2. 對每個評論涉及的屬性給出0至10分的評分\n" +
+		"	- 評分標準：\n" +
+		"		- 0分：完全無法接受，災難性的體驗或完全缺乏該屬性\n" +
+		"		- 1分：極差，接近最糟，強烈不建議\n" +
+		"		- 2分：非常差，幾乎無法接受，極度不滿意\n" +
+		"		- 3分：差，體驗不佳，有多處需要改善\n" +
+		"		- 4分：普通偏差，有明顯缺點，不太想再使用\n" +
+		"		- 5分：一般，剛好及格，不特別好也不差\n" +
+		"		- 6分：還可以，略低於期望，有改進空間\n" +
+		"		- 7分：普通偏好，有明顯優點也有些缺點\n" +
+		"		- 8分：很好，有些小地方可以更好，但整體令人滿意\n" +
+		"		- 9分：極好，幾乎沒有缺點，會想再次購買或使用\n" +
+		"		- 10分：完美無缺，超出期望，令人驚艷，強烈推薦\n\n" +
+		"- 回傳 JSON 陣列，格式：`[{\"attribute\": \"屬性1\", \"sentiment\": \"positive\", \"score\": 6}, {\"attribute\": \"屬性2\", \"sentiment\": \"negative\", \"score\": 4}]`\n" +
 		"- 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 		"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
 
@@ -210,6 +234,28 @@ func addSummaryForReviewMining(resultInfo *ReviewMiningStruct) error {
 	}
 	// 去除多餘的換行符
 	resultInfo.Summary = summary[:len(summary)-1]
+	return nil
+}
+
+func calculateAttributeAverageScores(reviewMiningResults []SingleReviewMiningResult) map[string]float64 {
+	scoreDT := insyra.NewDataTable()
+	for _, result := range reviewMiningResults {
+		for _, miningResult := range result.MiningResults {
+			scoreDT.AppendRowsByColName(map[string]any{miningResult.Attribute: miningResult.Score})
+		}
+	}
+	attributeScores := make(map[string]float64)
+	_, numCols := scoreDT.Size()
+	for i := range numCols {
+		col := scoreDT.GetColByNumber(i)
+		attributeName := col.GetName()
+		attributeScores[attributeName] = col.Mean()
+	}
+	return attributeScores
+}
+
+func regressAverageAttributeScoresAndRatings(results []SingleReviewMiningResult) *stats.LinearRegressionResult {
+	// todo:多元線性回歸
 	return nil
 }
 

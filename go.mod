@@ -27,12 +27,12 @@ require (
 	github.com/Masterminds/squirrel v1.5.4 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
 	github.com/campoy/embedmd v1.0.0 // indirect
-	github.com/chromedp/cdproto v0.0.0-20250530212709-4dcc110a7b92 // indirect
+	github.com/chromedp/cdproto v0.0.0-20250611220608-a17eb1ae8ff0 // indirect
 	github.com/chromedp/chromedp v0.13.6 // indirect
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
-	github.com/go-echarts/go-echarts/v2 v2.5.5 // indirect
+	github.com/go-echarts/go-echarts/v2 v2.6.0 // indirect
 	github.com/go-echarts/snapshot-chromedp v0.0.5 // indirect
 	github.com/go-fonts/liberation v0.3.3 // indirect
 	github.com/go-json-experiment/json v0.0.0-20250517221953-25912455fbc8 // indirect
@@ -100,7 +100,7 @@ require (
 
 require (
 	github.com/HazelnutParadise/Go-Utils v0.8.1
-	github.com/HazelnutParadise/insyra v0.2.2
+	github.com/HazelnutParadise/insyra v0.2.3
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
