@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/HazelnutParadise/Go-Utils/conv"
+	"github.com/HazelnutParadise/Go-Utils/sliceutil"
 	"github.com/HazelnutParadise/insyra"
 	"github.com/HazelnutParadise/insyra/stats"
 )
@@ -65,7 +66,7 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 	averageAttributeScores := calculateAttributeAverageScores(results)
 
 	// todo：迴歸分析
-	regressAverageAttributeScoresAndRatings(results)
+	regressAverageAttributeScoresAndRatings(attributes, results)
 
 	// **進行 T 檢定**
 	ttest := reviewsAttributeTTest(attributes, results)
@@ -254,8 +255,32 @@ func calculateAttributeAverageScores(reviewMiningResults []SingleReviewMiningRes
 	return attributeScores
 }
 
-func regressAverageAttributeScoresAndRatings(results []SingleReviewMiningResult) *stats.LinearRegressionResult {
+func regressAverageAttributeScoresAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) *stats.LinearRegressionResult {
 	// todo:多元線性回歸
+	ratingDL := insyra.NewDataList()
+	attributeDLs := make(map[string][2]*insyra.DataList)
+	for _, attribute := range attributes {
+		attributeScoresDL := insyra.NewDataList()
+		mentionedDL := insyra.NewDataList()
+		attributeDLs[attribute] = [2]*insyra.DataList{attributeScoresDL, mentionedDL}
+	}
+
+	// 準備變項
+	for _, result := range reviewMiningResults {
+		attributesToCollect := make([]string, len(attributes))
+		copy(attributesToCollect, attributes)
+		for _, miningResult := range result.MiningResults {
+			attributeDLs[miningResult.Attribute][0].Append(miningResult.Score)
+			attributeDLs[miningResult.Attribute][1].Append(1)
+			attributesToCollect = sliceutil.RemoveAll(attributesToCollect, miningResult.Attribute)
+		}
+		for _, attribute := range attributesToCollect {
+			attributeDLs[attribute][0].Append(5) // 未提及的屬性分數記為 5
+			attributeDLs[attribute][1].Append(0) // 未提及的屬性記為 0
+		}
+		ratingDL.Append(result.ReviewRating)
+	}
+	// todo
 	return nil
 }
 
