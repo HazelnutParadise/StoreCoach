@@ -65,8 +65,8 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 	// **計算屬性平均分數**
 	averageAttributeScores := calculateAttributeAverageScores(results)
 
-	// todo：迴歸分析
-	regressAverageAttributeScoresAndRatings(attributes, results)
+	// todo：多元迴歸分析
+	multipleLinearRegressAverageAttributeScoresAndRatings(attributes, results)
 
 	// **進行 T 檢定**
 	ttest := reviewsAttributeTTest(attributes, results)
@@ -255,7 +255,7 @@ func calculateAttributeAverageScores(reviewMiningResults []SingleReviewMiningRes
 	return attributeScores
 }
 
-func regressAverageAttributeScoresAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) *stats.LinearRegressionResult {
+func multipleLinearRegressAverageAttributeScoresAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) *stats.LinearRegressionResult {
 	// todo:多元線性回歸
 	ratingDL := insyra.NewDataList()
 	attributeDLs := make(map[string][2]*insyra.DataList)
@@ -281,6 +281,7 @@ func regressAverageAttributeScoresAndRatings(attributes []string, reviewMiningRe
 		ratingDL.Append(result.ReviewRating)
 	}
 	// todo
+	// stats.LinearRegression()
 	return nil
 }
 
