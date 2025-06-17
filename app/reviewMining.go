@@ -185,6 +185,8 @@ func analyzeReview(storeName, productName string, review string, attributes []st
 		"		- 8分：很好，有些小地方可以更好，但整體令人滿意\n" +
 		"		- 9分：極好，幾乎沒有缺點，會想再次購買或使用\n" +
 		"		- 10分：完美無缺，超出期望，令人驚艷，強烈推薦\n\n" +
+		"- 你只能從現有的屬性中選擇，不能添加新的屬性。\n" +
+		"- 特別留意評論是否為反諷\n" +
 		"- 回傳 JSON 陣列，格式：`[{\"attribute\": \"屬性1\", \"sentiment\": \"positive\", \"score\": 6}, {\"attribute\": \"屬性2\", \"sentiment\": \"negative\", \"score\": 4}]`\n" +
 		"- 只回傳 JSON 陣列，不要回傳其他文字。\n" +
 		"違反任何一條規則將會讓您蒙受鉅額損失，請務必仔細閱讀並遵守以上規則。"
