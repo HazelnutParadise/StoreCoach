@@ -279,6 +279,13 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 	}
 	for _, result := range reviewMiningResults {
 		for _, miningResult := range result.MiningResults {
+			// 若 attributeScores 尚未初始化，則初始化
+			if _, ok := attributeScores[miningResult.Attribute]; !ok {
+				attributeScores[miningResult.Attribute] = insyra.NewDataList()
+			}
+			if _, ok := ratingsFromReviewsMentionedAttribute[miningResult.Attribute]; !ok {
+				ratingsFromReviewsMentionedAttribute[miningResult.Attribute] = insyra.NewDataList()
+			}
 			attributeScores[miningResult.Attribute].Append(miningResult.Score)
 			ratingsFromReviewsMentionedAttribute[miningResult.Attribute].Append(result.ReviewRating)
 		}
