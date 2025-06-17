@@ -65,6 +65,8 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 	// **計算屬性平均分數**
 	averageAttributeScores := calculateAttributeAverageScores(results)
 
+	// todo: 簡單線性迴歸
+
 	// todo：多元迴歸分析
 	multipleLinearRegressAttributeScoresAndRatings(attributes, results)
 
