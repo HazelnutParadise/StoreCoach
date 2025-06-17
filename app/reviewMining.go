@@ -283,7 +283,6 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 			ratingsFromReviewsMentionedAttribute[miningResult.Attribute].Append(result.ReviewRating)
 		}
 	}
-
 	// **對每個屬性進行簡單線性迴歸**
 	for attribute, scores := range attributeScores {
 		ratings := ratingsFromReviewsMentionedAttribute[attribute]
@@ -291,6 +290,9 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 			continue // 略過這組數據
 		}
 		result := stats.LinearRegression(scores, ratings)
+		if result == nil {
+			continue // 如果線性迴歸失敗，跳過這個屬性
+		}
 		attributeRegressResultsMap[attribute] = ReviewMiningAttributeSimpleLinearRegressResult{
 			Slope:         result.Slope,
 			Intercept:     result.Intercept,
