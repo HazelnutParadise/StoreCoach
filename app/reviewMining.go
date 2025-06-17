@@ -35,12 +35,12 @@ type SingleReviewMiningResult struct {
 }
 
 type ReviewMiningAttributeSimpleLinearRegressResult struct {
-	Slope         float64   `json:"slope" bson:"slope"`
-	Intercept     float64   `json:"intercept" bson:"intercept"`
-	R2            float64   `json:"r2" bson:"r2"`
-	PValue        float64   `json:"pValue" bson:"pValue"`
-	StandardError float64   `json:"standardError" bson:"standardError"`
-	CI            []float64 `json:"ci" bson:"ci"`
+	Slope         float64    `json:"slope" bson:"slope"`
+	Intercept     float64    `json:"intercept" bson:"intercept"`
+	R2            float64    `json:"r2" bson:"r2"`
+	PValue        float64    `json:"pValue" bson:"pValue"`
+	StandardError float64    `json:"standardError" bson:"standardError"`
+	CI            [2]float64 `json:"ci" bson:"ci"`
 }
 
 type ReviewMiningAttributeTTestResult struct {
@@ -270,6 +270,7 @@ func calculateAttributeAverageScores(reviewMiningResults []SingleReviewMiningRes
 }
 
 func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) (attributeRegressResultsMap map[string]ReviewMiningAttributeSimpleLinearRegressResult) {
+	attributeRegressResultsMap = make(map[string]ReviewMiningAttributeSimpleLinearRegressResult)
 	attributeScores := make(map[string]*insyra.DataList)
 	ratingsFromReviewsMentionedAttribute := make(map[string]*insyra.DataList)
 	for _, attribute := range attributes {
@@ -296,7 +297,7 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 			R2:            result.RSquared,
 			PValue:        result.PValue,
 			StandardError: result.StandardError,
-			// CI:            result.CI, todo:insyra尚未實現
+			CI:            result.ConfidenceIntervalSlope,
 		}
 	}
 	return attributeRegressResultsMap
