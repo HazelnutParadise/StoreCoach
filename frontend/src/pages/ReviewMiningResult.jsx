@@ -561,11 +561,11 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                 />
               </div>
             ) : null}
-            {rmTtest ? (
+            {/* {rmTtest ? (
               <div className="card rm-card">
                 <RmTtest rmAttributes={rmAttributes} rmTtest={rmTtest} />
               </div>
-            ) : null}
+            ) : null} */}
           </div>
           <div className="summary-box">
             <h3 className="title">教練的小叮嚀 💪</h3>
