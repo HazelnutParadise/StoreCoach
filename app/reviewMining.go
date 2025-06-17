@@ -273,41 +273,59 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 	attributeRegressResultsMap = make(map[string]ReviewMiningAttributeSimpleLinearRegressResult)
 	attributeScores := make(map[string]*insyra.DataList)
 	ratingsFromReviewsMentionedAttribute := make(map[string]*insyra.DataList)
-	for _, attribute := range attributes {
-		attributeScores[attribute] = insyra.NewDataList()
-		ratingsFromReviewsMentionedAttribute[attribute] = insyra.NewDataList()
-	}
+
+	// 直接根據實際數據動態創建，不預初始化
 	for _, result := range reviewMiningResults {
 		for _, miningResult := range result.MiningResults {
-			// 若 attributeScores 尚未初始化，則初始化
-			if _, ok := attributeScores[miningResult.Attribute]; !ok {
+			// 確保 DataList 存在
+			if attributeScores[miningResult.Attribute] == nil {
 				attributeScores[miningResult.Attribute] = insyra.NewDataList()
 			}
-			if _, ok := ratingsFromReviewsMentionedAttribute[miningResult.Attribute]; !ok {
+			if ratingsFromReviewsMentionedAttribute[miningResult.Attribute] == nil {
 				ratingsFromReviewsMentionedAttribute[miningResult.Attribute] = insyra.NewDataList()
 			}
 			attributeScores[miningResult.Attribute].Append(miningResult.Score)
 			ratingsFromReviewsMentionedAttribute[miningResult.Attribute].Append(result.ReviewRating)
 		}
-	}
-	// **對每個屬性進行簡單線性迴歸**
+	} // **對每個屬性進行簡單線性迴歸**
 	for attribute, scores := range attributeScores {
-		ratings := ratingsFromReviewsMentionedAttribute[attribute]
-		if scores.Len() < 2 || ratings.Len() < 2 {
-			continue // 略過這組數據
+		ratings, exists := ratingsFromReviewsMentionedAttribute[attribute]
+		if !exists || ratings == nil || scores == nil {
+			continue // 如果任一資料結構不存在，跳過
 		}
-		result := stats.LinearRegression(scores, ratings)
-		if result == nil {
-			continue // 如果線性迴歸失敗，跳過這個屬性
+		if scores.Len() < 3 || ratings.Len() < 3 {
+			continue // 至少需要 3 個數據點才能進行可靠的線性迴歸
 		}
-		attributeRegressResultsMap[attribute] = ReviewMiningAttributeSimpleLinearRegressResult{
-			Slope:         result.Slope,
-			Intercept:     result.Intercept,
-			R2:            result.RSquared,
-			PValue:        result.PValue,
-			StandardError: result.StandardError,
-			CI:            result.ConfidenceIntervalSlope,
+		// 檢查數據變異性
+		scoresVariance := scores.Var()
+		ratingsVariance := ratings.Var()
+		if scoresVariance == 0 || ratingsVariance == 0 {
+			continue // 如果變異數為 0，跳過這個屬性
 		}
+
+		// 使用 recover 來捕獲可能的 panic
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					// 如果發生 panic，什麼都不做，只是跳過這個屬性
+					return
+				}
+			}()
+
+			result := stats.LinearRegression(scores, ratings)
+			if result == nil {
+				return // 如果線性迴歸失敗，跳過這個屬性
+			}
+
+			attributeRegressResultsMap[attribute] = ReviewMiningAttributeSimpleLinearRegressResult{
+				Slope:         result.Slope,
+				Intercept:     result.Intercept,
+				R2:            result.RSquared,
+				PValue:        result.PValue,
+				StandardError: result.StandardError,
+				CI:            result.ConfidenceIntervalSlope,
+			}
+		}()
 	}
 	return attributeRegressResultsMap
 }
