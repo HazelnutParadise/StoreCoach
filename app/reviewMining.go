@@ -172,7 +172,7 @@ func analyzeReview(storeName, productName string, review string, attributes []st
 		"	- 請根據已識別的屬性，找出評論涉及的類別，並對每個類別進行情緒分類。\n" +
 		"	- 全部的屬性：`" + conv.ToString(attributes) + "`\n" +
 		"	- 情緒分類包括：`" + conv.ToString(sentimentClassification) + "`。\n" +
-		"2. 對每個評論涉及的屬性給出0至10分的評分\n" +
+		"2. 對每個評論涉及的屬性給出0至10分的評分(score)。\n" +
 		"	- 評分標準：\n" +
 		"		- 0分：完全無法接受，災難性的體驗或完全缺乏該屬性\n" +
 		"		- 1分：極差，接近最糟，強烈不建議\n" +
