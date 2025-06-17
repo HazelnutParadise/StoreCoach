@@ -5,6 +5,7 @@ import "./ReviewMiningResult.css";
 import RmAttributesPieChart from "../charts/RmAttributesPieChart";
 import RmAttributesBarChart from "../charts/RmAttributesBarChart";
 import RmTtest from "../charts/RmTtest";
+import RmSimpleLinearRegress from "../charts/RmSimpleLinearRegress";
 
 const testData = {
   storeName: "好旺來餐廳",
@@ -554,8 +555,10 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             ) : null}
             {rmSimpleLinearRegress ? (
               <div className="card rm-card">
-                <h3>簡單線性回歸分析</h3>
-                {/* todo:  */}
+                <RmSimpleLinearRegress
+                  rmAttributes={rmAttributes}
+                  rmSimpleLinearRegress={rmSimpleLinearRegress}
+                />
               </div>
             ) : null}
             {rmTtest ? (
