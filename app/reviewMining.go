@@ -12,15 +12,16 @@ import (
 )
 
 type ReviewMiningStruct struct {
-	DataUUID               string                                      `bson:"dataUUID"`
-	StoreName              string                                      `json:"storeName" bson:"storeName"`
-	ProductName            string                                      `json:"productName" bson:"productName"`
-	Attributes             []string                                    `json:"attributes" bson:"attributes"`
-	Results                []SingleReviewMiningResult                  `json:"results" bson:"results"`
-	AverageAttributeScores map[string]float64                          `json:"averageAttributeScores" bson:"averageAttributeScores"`
-	TTest                  map[string]ReviewMiningAttributeTTestResult `json:"tTest" bson:"tTest"`
-	Summary                string                                      `json:"summary" bson:"summary"`
-	Timestamp              int64                                       `json:"timestamp" bson:"timestamp"`
+	DataUUID               string                                                    `bson:"dataUUID"`
+	StoreName              string                                                    `json:"storeName" bson:"storeName"`
+	ProductName            string                                                    `json:"productName" bson:"productName"`
+	Attributes             []string                                                  `json:"attributes" bson:"attributes"`
+	Results                []SingleReviewMiningResult                                `json:"results" bson:"results"`
+	AverageAttributeScores map[string]float64                                        `json:"averageAttributeScores" bson:"averageAttributeScores"`
+	SimpleLinearRegress    map[string]ReviewMiningAttributeSimpleLinearRegressResult `json:"simpleLinearRegress" bson:"simpleLinearRegress"`
+	TTest                  map[string]ReviewMiningAttributeTTestResult               `json:"tTest" bson:"tTest"`
+	Summary                string                                                    `json:"summary" bson:"summary"`
+	Timestamp              int64                                                     `json:"timestamp" bson:"timestamp"`
 }
 
 type SingleReviewMiningResult struct {
@@ -31,6 +32,15 @@ type SingleReviewMiningResult struct {
 		Sentiment string `json:"sentiment" bson:"sentiment"`
 		Score     uint8  `json:"score" bson:"score"`
 	} `json:"miningResults" bson:"miningResults"`
+}
+
+type ReviewMiningAttributeSimpleLinearRegressResult struct {
+	Slope         float64   `json:"slope" bson:"slope"`
+	Intercept     float64   `json:"intercept" bson:"intercept"`
+	R2            float64   `json:"r2" bson:"r2"`
+	PValue        float64   `json:"pValue" bson:"pValue"`
+	StandardError float64   `json:"standardError" bson:"standardError"`
+	CI            []float64 `json:"ci" bson:"ci"`
 }
 
 type ReviewMiningAttributeTTestResult struct {
@@ -65,7 +75,8 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 	// **計算屬性平均分數**
 	averageAttributeScores := calculateAttributeAverageScores(results)
 
-	// todo: 簡單線性迴歸
+	// **針對每個屬性簡單線性迴歸**
+	simpleLinearRegressResults := simpleLinearRegressEachAttributeScoreAndRatings(attributes, results)
 
 	// todo：多元迴歸分析
 	multipleLinearRegressAttributeScoresAndRatings(attributes, results)
@@ -79,6 +90,7 @@ func ReviewMining(storeName string, productName string, reviews []string, rating
 		Attributes:             attributes,
 		Results:                results,
 		AverageAttributeScores: averageAttributeScores,
+		SimpleLinearRegress:    simpleLinearRegressResults,
 		TTest:                  ttest,
 	}
 
@@ -255,6 +267,39 @@ func calculateAttributeAverageScores(reviewMiningResults []SingleReviewMiningRes
 		attributeScores[attributeName] = col.Mean()
 	}
 	return attributeScores
+}
+
+func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) (attributeRegressResultsMap map[string]ReviewMiningAttributeSimpleLinearRegressResult) {
+	attributeScores := make(map[string]*insyra.DataList)
+	ratingsFromReviewsMentionedAttribute := make(map[string]*insyra.DataList)
+	for _, attribute := range attributes {
+		attributeScores[attribute] = insyra.NewDataList()
+		ratingsFromReviewsMentionedAttribute[attribute] = insyra.NewDataList()
+	}
+	for _, result := range reviewMiningResults {
+		for _, miningResult := range result.MiningResults {
+			attributeScores[miningResult.Attribute].Append(miningResult.Score)
+			ratingsFromReviewsMentionedAttribute[miningResult.Attribute].Append(result.ReviewRating)
+		}
+	}
+
+	// **對每個屬性進行簡單線性迴歸**
+	for attribute, scores := range attributeScores {
+		ratings := ratingsFromReviewsMentionedAttribute[attribute]
+		if scores.Len() < 2 || ratings.Len() < 2 {
+			continue // 略過這組數據
+		}
+		result := stats.LinearRegression(scores, ratings)
+		attributeRegressResultsMap[attribute] = ReviewMiningAttributeSimpleLinearRegressResult{
+			Slope:         result.Slope,
+			Intercept:     result.Intercept,
+			R2:            result.RSquared,
+			PValue:        result.PValue,
+			StandardError: result.StandardError,
+			// CI:            result.CI, todo:insyra尚未實現
+		}
+	}
+	return attributeRegressResultsMap
 }
 
 func multipleLinearRegressAttributeScoresAndRatings(attributes []string, reviewMiningResults []SingleReviewMiningResult) *stats.LinearRegressionResult {
