@@ -309,6 +309,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   let rmSummary = result?.summary;
   const rmTimestamp = result?.timestamp;
   let rmRatings = result?.results?.map((r) => r.reviewRating);
+  const rmSimpleLinearRegress = result?.simpleLinearRegress;
   const rmTtest = result?.tTest;
 
   let attributeCount = {};
@@ -549,6 +550,12 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            ) : null}
+            {rmSimpleLinearRegress ? (
+              <div className="card rm-card">
+                <h3>簡單線性回歸分析</h3>
+                {/* todo:  */}
               </div>
             ) : null}
             {rmTtest ? (
