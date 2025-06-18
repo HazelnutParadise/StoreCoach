@@ -4,7 +4,10 @@ const RmSimpleLinearRegress = ({ rmAttributes, rmSimpleLinearRegress }) => {
 
   return (
     <>
-      <h3>前五大屬性對顧客評分的線性回歸分析（R²值與顯著性，顯著水準=0.05）</h3>
+      <h3>
+        前五大屬性得分分別對商家評分的影響（簡單線性回歸分析
+        R²值與顯著性，顯著水準=0.05）
+      </h3>
       <div className="ttest-container">
         {attributes.map((attribute) => (
           <div className="ttest-box" key={attribute}>
@@ -69,7 +72,7 @@ const RmSimpleLinearRegress = ({ rmAttributes, rmSimpleLinearRegress }) => {
                       {rmSimpleLinearRegress[attribute].slope.toFixed(3)}
                       <br />
                       <span style={{ fontSize: "0.6rem", color: "#aaa" }}>
-                        (該屬性評分每提升1分對總評的影響)
+                        (該屬性分數每提升1分對商家評分的影響)
                       </span>
                     </div>
                   )}

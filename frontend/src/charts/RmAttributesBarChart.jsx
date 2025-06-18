@@ -1,9 +1,15 @@
 import { Bar } from "react-chartjs-2";
 import ChartStyle from "./ChartStyle";
 
-const RmAttributesBarChart = ({ rmAttributes, rmResults }) => {
-  const sortedAttributes = rmAttributes;
-  const top5Attributes = sortedAttributes.slice(0, 5);
+const RmAttributesBarChart = ({
+  rmAttributes,
+  rmResults,
+  topFiveAttributesByMentions,
+}) => {
+  // 使用預計算的前五大屬性，如果沒有則回退到簡單的前5個
+  const top5Attributes = topFiveAttributesByMentions
+    ? topFiveAttributesByMentions.map((item) => item.attribute)
+    : rmAttributes.slice(0, 5);
   const positiveCount = {};
   const negativeCount = {};
   const neutralCount = {};

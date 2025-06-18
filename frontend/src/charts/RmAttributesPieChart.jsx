@@ -5,43 +5,75 @@ import ChartStyle from "./ChartStyle";
 
 Chart.register(ChartDataLabels);
 
-const RmAttributesPieChart = ({ rmAttributes, rmResults }) => {
-  const attributeTimes = {};
-  rmAttributes.forEach((element) => {
-    attributeTimes[element] = 0;
-  });
+const RmAttributesPieChart = ({
+  rmAttributes,
+  rmResults,
+  topFiveAttributesByMentions,
+  attributeMentionCounts,
+}) => {
+  // 如果有預計算的數據，使用它們；否則回退到原始計算
+  let sortedAttributes, sortedAttributeTimesList;
 
-  rmResults.forEach((result) => {
-    const miningResults = result.miningResults;
-    miningResults.forEach((miningResult) => {
-      if (miningResult.attribute in attributeTimes) {
-        attributeTimes[miningResult.attribute]++;
+  if (topFiveAttributesByMentions && attributeMentionCounts) {
+    // 使用預計算的數據
+    sortedAttributes = topFiveAttributesByMentions.map(
+      (item) => item.attribute
+    );
+    sortedAttributeTimesList = topFiveAttributesByMentions.map(
+      (item) => item.count
+    );
+
+    // 計算"其他"類別
+    const totalMentions = Object.values(attributeMentionCounts).reduce(
+      (a, b) => a + b,
+      0
+    );
+    const topFiveMentions = sortedAttributeTimesList.reduce((a, b) => a + b, 0);
+    const otherMentions = totalMentions - topFiveMentions;
+
+    if (otherMentions > 0) {
+      sortedAttributes.push("其他");
+      sortedAttributeTimesList.push(otherMentions);
+    }
+  } else {
+    // 回退到原始計算邏輯
+    const attributeTimes = {};
+    rmAttributes.forEach((element) => {
+      attributeTimes[element] = 0;
+    });
+
+    rmResults.forEach((result) => {
+      const miningResults = result.miningResults;
+      miningResults.forEach((miningResult) => {
+        if (miningResult.attribute in attributeTimes) {
+          attributeTimes[miningResult.attribute]++;
+        }
+      });
+    });
+
+    let sortedAttributesTemp = Object.keys(attributeTimes).sort(
+      (a, b) => attributeTimes[b] - attributeTimes[a]
+    );
+
+    sortedAttributeTimesList = [];
+    let count = 0;
+    sortedAttributesTemp.forEach((attribute) => {
+      if (count < 5) {
+        sortedAttributeTimesList.push(attributeTimes[attribute]);
+        count++;
+      } else if (count === 5) {
+        sortedAttributeTimesList[5] = attributeTimes[attribute];
+        count++;
+      } else {
+        console.log(attribute);
+        sortedAttributeTimesList[5] += attributeTimes[attribute];
       }
     });
-  });
 
-  let sortedAttributes = Object.keys(attributeTimes).sort(
-    (a, b) => attributeTimes[b] - attributeTimes[a]
-  );
-
-  const sortedAttributeTimesList = [];
-  let count = 0;
-  sortedAttributes.forEach((attribute) => {
-    if (count < 5) {
-      sortedAttributeTimesList.push(attributeTimes[attribute]);
-      count++;
-    } else if (count === 5) {
-      sortedAttributeTimesList[5] = attributeTimes[attribute];
-      count++;
-    } else {
-      console.log(attribute);
-      sortedAttributeTimesList[5] += attributeTimes[attribute];
-    }
-  });
-
-  sortedAttributes = sortedAttributes.slice(0, 5);
-  if (sortedAttributeTimesList[5] && sortedAttributeTimesList[5] !== 0)
-    sortedAttributes.push("其他");
+    sortedAttributes = sortedAttributesTemp.slice(0, 5);
+    if (sortedAttributeTimesList[5] && sortedAttributeTimesList[5] !== 0)
+      sortedAttributes.push("其他");
+  }
 
   console.log(sortedAttributes);
   console.log(sortedAttributeTimesList);

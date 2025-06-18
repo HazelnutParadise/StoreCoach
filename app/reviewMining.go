@@ -281,8 +281,13 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 	}
 	for _, result := range reviewMiningResults {
 		for _, miningResult := range result.MiningResults {
-			attributeScores[miningResult.Attribute].Append(miningResult.Score)
-			ratingsFromReviewsMentionedAttribute[miningResult.Attribute].Append(result.ReviewRating)
+			// 檢查屬性是否存在於初始化的 map 中，避免 nil pointer panic
+			if scoresList, exists := attributeScores[miningResult.Attribute]; exists {
+				scoresList.Append(miningResult.Score)
+			}
+			if ratingsList, exists := ratingsFromReviewsMentionedAttribute[miningResult.Attribute]; exists {
+				ratingsList.Append(result.ReviewRating)
+			}
 		}
 	}
 	// **對每個屬性進行簡單線性迴歸**
@@ -322,9 +327,12 @@ func multipleLinearRegressAttributeScoresAndRatings(attributes []string, reviewM
 		attributesToCollect := make([]string, len(attributes))
 		copy(attributesToCollect, attributes)
 		for _, miningResult := range result.MiningResults {
-			attributeDLs[miningResult.Attribute][0].Append(miningResult.Score)
-			attributeDLs[miningResult.Attribute][1].Append(1)
-			attributesToCollect = sliceutil.RemoveAll(attributesToCollect, miningResult.Attribute)
+			// 檢查屬性是否存在於初始化的 map 中，避免 nil pointer panic
+			if dlArray, exists := attributeDLs[miningResult.Attribute]; exists {
+				dlArray[0].Append(miningResult.Score)
+				dlArray[1].Append(1)
+				attributesToCollect = sliceutil.RemoveAll(attributesToCollect, miningResult.Attribute)
+			}
 		}
 		for _, attribute := range attributesToCollect {
 			attributeDLs[attribute][0].Append(5) // 未提及的屬性分數記為 5
@@ -390,12 +398,21 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 }
 
 // **合併去重的屬性函數**
-func mergeSlicesUnique[T any](existing []T, newElements []T) []T {
-	elementMap := make(map[any]bool)
+func mergeSlicesUnique[T comparable](existing []T, newElements []T) []T {
+	elementMap := make(map[T]bool)
+
+	// 添加現有元素到 map
 	for _, el := range existing {
 		elementMap[el] = true
 	}
+
+	// 添加新元素，過濾空字符串（如果是 string 類型）
 	for _, el := range newElements {
+		// 對於字符串類型，過濾空字符串
+		if str, ok := any(el).(string); ok && str == "" {
+			continue
+		}
+
 		if !elementMap[el] {
 			existing = append(existing, el)
 			elementMap[el] = true
