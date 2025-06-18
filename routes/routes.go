@@ -3,6 +3,7 @@ package routes
 import (
 	"StoreCoach/app"
 	"StoreCoach/database"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -51,6 +52,23 @@ func SetRoutes(r *gin.Engine, indexHtml []byte, assets http.FileSystem) {
 	apiGp.GET("/review-mining/:data_uuid", func(c *gin.Context) {
 		dataUUID := c.Param("data_uuid")
 		log.Printf("Received request for dataUUID: %s", dataUUID)
+
+		// 檢查是否錯誤
+		if dataUUID == "" {
+			c.JSON(400, gin.H{
+				"message": "Bad Request: data_uuid is required",
+			})
+			return
+		}
+
+		e, ok := app.ReviewMiningErrBuf.LoadAndDelete(dataUUID)
+		if ok {
+			// 如果有錯誤，回傳錯誤訊息
+			c.JSON(500, gin.H{
+				"message": fmt.Sprintf("Internal Server Error: data processing failed for dataUUID %s: %v", dataUUID, e.(error)),
+			})
+			return
+		}
 
 		// 先檢查資料庫是否有結果
 		result, err := database.FindReviewMiningResult(dataUUID)

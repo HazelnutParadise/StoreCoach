@@ -12,8 +12,9 @@ import (
 
 var json = jsoniter.ConfigFastest
 
-var ReviewMiningDataBuf sync.Map
+var ReviewMiningDataBuf = sync.Map{}
 var IsMiningList = insyra.NewDataList()
+var ReviewMiningErrBuf = sync.Map{}
 
 type ReviewData struct {
 	StoreName   string   `json:"storeName"`
@@ -57,6 +58,7 @@ func HandleReviewMining(dataUUID string) (result *ReviewMiningStruct, err error)
 	reviewDataAny, ok := ReviewMiningDataBuf.LoadAndDelete(dataUUID)
 	if !ok {
 		err = errors.New("data not found")
+		ReviewMiningErrBuf.Store(dataUUID, err)
 		return nil, err
 	}
 	IsMiningList.Append(dataUUID)
