@@ -62,17 +62,30 @@ const ReviewMiningResult = ({ setPageTitle }) => {
         .slice(0, 5)
         .map(([attribute, count]) => ({ attribute, count }));
     }
-  }
-
-  // 3. 為提及次數前五的屬性加上平均得分資訊
+  } // 3. 為提及次數前五的屬性加上平均得分資訊
   let topFiveAttributesByMentionsWithScores = [];
   if (topFiveAttributesByMentions.length > 0 && rmAverageAttributeScores) {
-    topFiveAttributesByMentionsWithScores = topFiveAttributesByMentions.map(
-      (item, index) => ({
-        attribute: item.attribute,
-        count: item.count,
-        score: rmAverageAttributeScores[item.attribute] || 0,
-        rank: index + 1,
+    // 先為每個屬性加上平均得分
+    const attributesWithScores = topFiveAttributesByMentions.map((item) => ({
+      attribute: item.attribute,
+      count: item.count,
+      score: rmAverageAttributeScores[item.attribute] || 0,
+    }));
+
+    // 計算按平均分的排名
+    const sortedByScore = [...attributesWithScores].sort(
+      (a, b) => b.score - a.score
+    );
+    const scoreRanks = {};
+    sortedByScore.forEach((item, index) => {
+      scoreRanks[item.attribute] = index + 1;
+    });
+
+    // 保持按提及次數的原始順序，但加上按平均分的排名
+    topFiveAttributesByMentionsWithScores = attributesWithScores.map(
+      (item) => ({
+        ...item,
+        scoreRank: scoreRanks[item.attribute],
       })
     );
   }
@@ -422,7 +435,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             topFiveAttributesByMentionsWithScores.length > 0 ? (
               <div className="card rm-card">
                 {" "}
-                <h3>提及次數前五多的屬性平均得分</h3>
+                <h3>提及次數前五多的屬性平均得分</h3>{" "}
                 <p
                   style={{
                     fontSize: "0.9rem",
@@ -430,11 +443,11 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                     marginBottom: "1rem",
                   }}
                 >
-                  基於提及次數最多的前五個屬性，得分由教練根據顧客評論判定，範圍：0-10分
+                  基於提及次數最多的前五個屬性，按提及次數順序顯示，排名標示按平均得分高低。得分由教練根據顧客評論判定，範圍：0-10分
                 </p>{" "}
                 <div className="rating-container">
                   {" "}
-                  {topFiveAttributesByMentionsWithScores.map((item, index) => {
+                  {topFiveAttributesByMentionsWithScores.map((item) => {
                     // 定義不同名次的顏色主題
                     const getRankStyle = (rank) => {
                       const styles = {
@@ -470,9 +483,9 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                         },
                       };
                       return styles[rank] || styles[5];
-                    };
-
-                    const rankStyle = getRankStyle(index + 1);
+                    }; // 使用屬性的平均分排名來決定顏色和徽章
+                    const scoreRank = item.scoreRank;
+                    const rankStyle = getRankStyle(scoreRank);
 
                     return (
                       <div
@@ -504,7 +517,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                             boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                           }}
                         >
-                          {index + 1}
+                          {scoreRank}
                         </div>
                         <h4
                           style={{
