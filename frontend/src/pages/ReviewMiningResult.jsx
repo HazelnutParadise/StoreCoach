@@ -340,7 +340,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
             {rmRatings ? (
               <div className="div3" style={{ width: "100%" }}>
                 <div className="card rm-card">
-                  <h3>顧客評分分布</h3>
+                  <h3>顧客商家評分分布</h3>
                   <div className="rating-container">
                     <div className="rating-box">
                       <h4

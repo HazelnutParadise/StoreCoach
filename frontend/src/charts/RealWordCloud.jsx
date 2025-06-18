@@ -22,17 +22,15 @@ const RealWordCloud = ({ title, attributes, color }) => {
       const counts = attributes.map((attr) => attr.count);
       const maxCount = Math.max(...counts);
       const minCount = Math.min(...counts);
-      const countRange = maxCount - minCount || 1; // 避免除以0
-
-      // 文字雲選項
+      const countRange = maxCount - minCount || 1; // 避免除以0      // 文字雲選項
       const options = {
         list: wordList,
-        gridSize: Math.round((16 * canvas.width) / 1024),
+        gridSize: Math.max(8, Math.round((8 * canvas.width) / 1024)), // 調整網格大小以配合更大文字
         weightFactor: function (size) {
-          // 基於當前數據集的範圍動態調整大小
+          // 基於當前數據集的範圍動態調整大小，大幅增加基礎大小
           const normalizedSize = (size - minCount) / countRange;
-          const baseSize = (canvas.width / 1024) * 12;
-          const sizeMultiplier = 0.5 + normalizedSize * 2; // 0.5倍到2.5倍之間
+          const baseSize = Math.max(24, (canvas.width / 1024) * 40); // 最小24px，基礎大小大幅提升
+          const sizeMultiplier = 1 + normalizedSize * 3; // 1倍到4倍之間
           return baseSize * sizeMultiplier;
         },
         fontFamily: 'Arial, "Microsoft YaHei", "PingFang SC", sans-serif',
