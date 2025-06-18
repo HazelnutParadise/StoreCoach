@@ -5,7 +5,7 @@ const RmSimpleLinearRegress = ({ rmAttributes, rmSimpleLinearRegress }) => {
   return (
     <>
       <h3>
-        前五大屬性得分分別對商家評分的影響（簡單線性回歸分析
+        提及次數前五多的屬性得分分別對商家評分的影響（簡單線性回歸分析
         R²值與顯著性，顯著水準=0.05）
       </h3>
       <div className="ttest-container">
