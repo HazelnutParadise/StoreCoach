@@ -93,7 +93,7 @@ const RmAttributesBarChart = ({
 
   return (
     <div style={ChartStyle}>
-      <h3>前五大屬性被提及時的情緒分布</h3>
+      <h3>提及次數前五多的屬性被提及時的情緒分布</h3>
       <Bar options={options} data={data} />
     </div>
   );

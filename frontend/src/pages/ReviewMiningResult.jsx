@@ -6,296 +6,7 @@ import RmAttributesPieChart from "../charts/RmAttributesPieChart";
 import RmAttributesBarChart from "../charts/RmAttributesBarChart";
 import RmTtest from "../charts/RmTtest";
 import RmSimpleLinearRegress from "../charts/RmSimpleLinearRegress";
-
-const testData = {
-  storeName: "好旺來餐廳",
-  attributes: ["餐點美味度", "價格", "環境", "服務", "衛生", "精緻度", "cp值"],
-  tTest: {
-    餐點美味度: {
-      pValue: 0.1,
-      tValue: 5.2,
-      df: 10,
-    },
-    價格: {
-      pValue: 0.25,
-      tValue: 5.2,
-      df: 10,
-    },
-    環境: {
-      pValue: 0.0033,
-      tValue: 5.2,
-      df: 10,
-    },
-    服務: {
-      pValue: 0.0001,
-      tValue: 5.2,
-      df: 10,
-    },
-    衛生: {
-      pValue: 0.0001,
-      tValue: 5.2,
-      df: 10,
-    },
-    精緻度: {
-      pValue: 0.0001,
-      tValue: 5.2,
-      df: 10,
-    },
-    cp值: {
-      pValue: 0.0001,
-      tValue: 5.2,
-      df: 10,
-    },
-  },
-  results: [
-    {
-      reviewContent: "這家店的餐點很好吃，價格也很實惠。",
-      reviewRating: 5,
-      miningResults: [
-        {
-          attribute: "餐點美味度",
-          sentiment: "positive",
-        },
-        {
-          attribute: "價格",
-          sentiment: "positive",
-        },
-      ],
-    },
-    {
-      reviewContent: "環境不錯，服務也很好。",
-      reviewRating: 4,
-      miningResults: [
-        {
-          attribute: "環境",
-          sentiment: "positive",
-        },
-        {
-          attribute: "服務",
-          sentiment: "positive",
-        },
-      ],
-    },
-    {
-      reviewContent: "這家店的態度很差，也不好吃。",
-      reviewRating: 1,
-      miningResults: [
-        {
-          attribute: "餐點美味度",
-          sentiment: "negative",
-        },
-        {
-          attribute: "服務",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "so disgusting",
-      reviewRating: 1,
-      miningResults: [
-        {
-          attribute: "餐點美味度",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "drinks are too expensive",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "價格偏高，但是餐點很美味。",
-      reviewRating: 4,
-      miningResults: [
-        {
-          attribute: "餐點美味度",
-          sentiment: "positive",
-        },
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-        {
-          attribute: "精緻度",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-        {
-          attribute: "精緻度",
-          sentiment: "negative",
-        },
-        {
-          attribute: "cp值",
-          sentiment: "negative",
-        },
-      ],
-    },
-    {
-      reviewContent: "不衛生，價格也不便宜。",
-      reviewRating: 2,
-      miningResults: [
-        {
-          attribute: "價格",
-          sentiment: "negative",
-        },
-        {
-          attribute: "衛生",
-          sentiment: "negative",
-        },
-      ],
-    },
-  ],
-  summary:
-    "好旺來餐廳的餐點美味度普遍受到肯定，環境與服務也有正面評價。然而，價格、衛生及部分服務態度是主要問題。\n\n主要優點：\n餐點美味度高，環境不錯，服務整體而言良好。\n\n主要缺點：\n價格偏高，衛生狀況不佳，部分服務態度差。\n\n中性評價：\n無明顯中性評價。\n\n教練的建議：\n1. 價格策略調整：重新評估菜單定價，考慮推出優惠套餐或會員制度，以提高價格競爭力。同時，針對高價位餐點，需確保其品質與份量能與價格相符。\n2. 加強衛生管理：徹底檢查並改善餐廳的衛生狀況，包括廚房清潔、餐具消毒、環境整潔等。定期進行衛生檢查，並公開透明地展示衛生措施，以贏取顧客信任。\n3. 提升服務品質：加強員工培訓，提升服務態度與專業技能。建立完善的顧客投訴處理機制，積極回應顧客意見，並及時解決問題。",
-  timestamp: 1741099358,
-};
+import RealWordCloud from "../charts/RealWordCloud";
 
 const ReviewMiningResult = ({ setPageTitle }) => {
   const navigate = useNavigate();
@@ -311,37 +22,38 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   const rmTimestamp = result?.timestamp;
   let rmRatings = result?.results?.map((r) => r.reviewRating);
   const rmSimpleLinearRegress = result?.simpleLinearRegress;
-  const rmTtest = result?.tTest;
   const rmAverageAttributeScores = result?.averageAttributeScores;
   let attributeCount = {};
 
   // 統一計算各種前五大屬性數據
-  let topFiveAttributesByScore = [];
   let topFiveAttributesByMentions = [];
   let attributeMentionCounts = {};
+  let positiveAttributes = {};
+  let negativeAttributes = {};
 
   if (result) {
-    // 1. 計算按平均得分排序的前五大屬性
-    if (rmAverageAttributeScores) {
-      topFiveAttributesByScore = Object.entries(rmAverageAttributeScores)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, 5)
-        .map(([attribute, score]) => ({ attribute, score }));
-    }
-
-    // 2. 計算按提及次數排序的前五大屬性（給餅圖用）
+    // 計算按提及次數排序的前五大屬性（給餅圖用）
     if (rmAttributes && rmResults) {
       // 初始化屬性計數
       rmAttributes.forEach((element) => {
         attributeMentionCounts[element] = 0;
+        positiveAttributes[element] = 0;
+        negativeAttributes[element] = 0;
       });
 
-      // 統計每個屬性的提及次數
+      // 統計每個屬性的提及次數和情感分布
       rmResults.forEach((result) => {
         const miningResults = result.miningResults;
         miningResults.forEach((miningResult) => {
           if (miningResult.attribute in attributeMentionCounts) {
             attributeMentionCounts[miningResult.attribute]++;
+
+            // 統計正面和負面情感
+            if (miningResult.sentiment === "positive") {
+              positiveAttributes[miningResult.attribute]++;
+            } else if (miningResult.sentiment === "negative") {
+              negativeAttributes[miningResult.attribute]++;
+            }
           }
         });
       }); // 按提及次數排序，取前5名
@@ -364,6 +76,26 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       })
     );
   }
+  // 生成文字雲數據
+  const getPositiveWordCloudData = () => {
+    if (!positiveAttributes || typeof positiveAttributes !== "object") {
+      return [];
+    }
+    return Object.entries(positiveAttributes)
+      .filter(([, count]) => count > 0)
+      .sort(([, a], [, b]) => b - a)
+      .map(([attribute, count]) => ({ attribute, count }));
+  };
+
+  const getNegativeWordCloudData = () => {
+    if (!negativeAttributes || typeof negativeAttributes !== "object") {
+      return [];
+    }
+    return Object.entries(negativeAttributes)
+      .filter(([, count]) => count > 0)
+      .sort(([, a], [, b]) => b - a)
+      .map(([attribute, count]) => ({ attribute, count }));
+  };
 
   if (result) {
     if (!rmAttributes) {
@@ -409,9 +141,6 @@ const ReviewMiningResult = ({ setPageTitle }) => {
     let isMounted = true;
 
     const fetchData = async () => {
-      // const failedTimeout = 10 * 60 * 1000;
-      // const startTime = new Date().getTime();
-
       try {
         while (isMounted) {
           try {
@@ -437,15 +166,12 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               break;
             }
           } catch (err) {
-            // const nowTime = new Date().getTime();
-            // if (nowTime - startTime > failedTimeout) {
             if (isMounted) {
               alert("Failed to fetch data");
               console.error(err);
               navigate("/");
             }
             break;
-            // }
           }
         }
       } finally {
@@ -461,6 +187,7 @@ const ReviewMiningResult = ({ setPageTitle }) => {
       isMounted = false;
     };
   }, [dataUUID, navigate]);
+
   if (isLoading) {
     return <FullScreenLoader />;
   } else if (result) {
@@ -526,7 +253,90 @@ const ReviewMiningResult = ({ setPageTitle }) => {
                   topFiveAttributesByMentions={topFiveAttributesByMentions}
                 />
               </div>
-            </div>
+            </div>{" "}
+            {/* 屬性情感文字雲 */}
+            {result &&
+              (getPositiveWordCloudData().length > 0 ||
+                getNegativeWordCloudData().length > 0) && (
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    gap: "20px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div style={{ flex: "1", minWidth: "calc(50% - 10px)" }}>
+                    <div className="chart-box card rm-card">
+                      {getPositiveWordCloudData().length > 0 ? (
+                        <RealWordCloud
+                          attributes={getPositiveWordCloudData()}
+                          title="正面提及屬性文字雲"
+                          color="#2ecc71"
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            height: "300px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <h3
+                            style={{
+                              color: "#2ecc71",
+                              textAlign: "center",
+                              margin: 0,
+                            }}
+                          >
+                            正面提及屬性文字雲
+                          </h3>
+                          <p style={{ color: "#666", marginTop: "10px" }}>
+                            暫無正面評論數據
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ flex: "1", minWidth: "calc(50% - 10px)" }}>
+                    <div className="chart-box card rm-card">
+                      {getNegativeWordCloudData().length > 0 ? (
+                        <RealWordCloud
+                          attributes={getNegativeWordCloudData()}
+                          title="負面提及屬性文字雲"
+                          color="#e74c3c"
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            height: "300px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <h3
+                            style={{
+                              color: "#e74c3c",
+                              textAlign: "center",
+                              margin: 0,
+                            }}
+                          >
+                            負面提及屬性文字雲
+                          </h3>
+                          <p style={{ color: "#666", marginTop: "10px" }}>
+                            暫無負面評論數據
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             {rmRatings ? (
               <div className="div3" style={{ width: "100%" }}>
                 <div className="card rm-card">
@@ -733,18 +543,13 @@ const ReviewMiningResult = ({ setPageTitle }) => {
               </div>
             ) : null}
             {rmSimpleLinearRegress ? (
-              <div className="card rm-card">
+              <div className="card rm-card" style={{ width: "100%" }}>
                 <RmSimpleLinearRegress
                   rmAttributes={rmAttributes}
                   rmSimpleLinearRegress={rmSimpleLinearRegress}
                 />
               </div>
             ) : null}
-            {/* {rmTtest ? (
-              <div className="card rm-card">
-                <RmTtest rmAttributes={rmAttributes} rmTtest={rmTtest} />
-              </div>
-            ) : null} */}
           </div>
           <div className="summary-box">
             <h3 className="title">教練的小叮嚀 💪</h3>
