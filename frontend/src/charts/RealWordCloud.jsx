@@ -14,23 +14,38 @@ const RealWordCloud = ({ title, attributes, color }) => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
 
+      // 高 DPI 支持，提升文字清晰度
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+
+      // 設置實際尺寸（考慮設備像素比）
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+
+      // 縮放上下文以匹配設備像素比
+      ctx.scale(dpr, dpr);
+
+      // 設置畫布顯示尺寸
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
+
       // 清除畫布
       ctx.clearRect(0, 0, canvas.width, canvas.height); // 準備文字雲數據
-      const wordList = attributes.map((attr) => [attr.attribute, attr.count]);
-
-      // 計算當前數據集的最大和最小值，用於動態調整大小
+      const wordList = attributes.map((attr) => [attr.attribute, attr.count]); // 計算當前數據集的最大和最小值，用於動態調整大小
       const counts = attributes.map((attr) => attr.count);
       const maxCount = Math.max(...counts);
       const minCount = Math.min(...counts);
-      const countRange = maxCount - minCount || 1; // 避免除以0      // 文字雲選項
+      const countRange = maxCount - minCount || 1; // 避免除以0
+
+      // 文字雲選項
       const options = {
         list: wordList,
-        gridSize: Math.max(8, Math.round((8 * canvas.width) / 1024)), // 調整網格大小以配合更大文字
+        gridSize: Math.max(4, Math.round((6 * canvas.width) / 2048)), // 針對高解析度調整網格
         weightFactor: function (size) {
-          // 基於當前數據集的範圍動態調整大小，大幅增加基礎大小
+          // 基於當前數據集的範圍動態調整大小，針對高解析度優化
           const normalizedSize = (size - minCount) / countRange;
-          const baseSize = Math.max(24, (canvas.width / 1024) * 40); // 最小24px，基礎大小大幅提升
-          const sizeMultiplier = 1 + normalizedSize * 3; // 1倍到4倍之間
+          const baseSize = Math.max(32, (canvas.width / 2048) * 80); // 針對高解析度提升基礎大小
+          const sizeMultiplier = 1.2 + normalizedSize * 2.5; // 1.2倍到3.7倍之間
           return baseSize * sizeMultiplier;
         },
         fontFamily: 'Arial, "Microsoft YaHei", "PingFang SC", sans-serif',
@@ -118,13 +133,12 @@ const RealWordCloud = ({ title, attributes, color }) => {
           boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
         }}
       >
+        {" "}
         <canvas
           ref={canvasRef}
-          width={400}
-          height={280}
           style={{
-            maxWidth: "100%",
-            maxHeight: "100%",
+            width: "100%",
+            height: "100%",
             borderRadius: "6px",
           }}
         />
