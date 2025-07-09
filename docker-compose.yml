@@ -2,15 +2,15 @@ services:
   web:
     image: storecoach
     ports:
-      - "6868:8080"
+      - "127.0.0.1:6868:8080"
     restart: unless-stopped
     networks:
       - ollama-net
       - storecoach-net
   mongo:
     image: mongodb/mongodb-community-server:latest
-    ports:
-      - "6867:27017"
+    # ports:
+    #   - "6867:27017"
     volumes:
       - /mnt/hdd0/storecoach/db:/data/db
     user: root
