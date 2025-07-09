@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "chart.js";
 import TopBar from "./components/TopBar";
+import Navbar from "./components/Navbar";
 import ReviewsInput from "./components/ReviewsInput";
 import ReviewMiningResult from "./pages/ReviewMiningResult";
 import PageNotFound from "./pages/404";
@@ -54,10 +55,6 @@ const App = () => {
   useEffect(() => {
     document.title = title;
   }, [title]);
-
-  useEffect(() => {
-    getNavbar();
-  }, []);
 
   const currentYear = new Date().getFullYear();
 
@@ -170,7 +167,7 @@ const App = () => {
         />
       </Routes>
       <footer>
-        <div id="navbar-placeholder"></div>
+        <Navbar />
         <div>{currentYear} © HazelnutParadise</div>
       </footer>
     </>
