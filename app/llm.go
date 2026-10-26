@@ -8,8 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/HazelnutParadise/insyra"
-	"github.com/google/uuid"
+	"github.com/HazelnutParadise/insyra/engine/ring"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/ollama"
 	"google.golang.org/genai"
@@ -22,20 +21,64 @@ var (
 	llmGeminiRequestInterval time.Duration = 2100 * time.Millisecond
 )
 
-var (
-	llmGeminiReqBuf = insyra.NewDataList()
-	llmLocalReqBuf  = insyra.NewDataList()
-)
-var llmReqBufs = []*insyra.DataList{llmGeminiReqBuf, llmLocalReqBuf}
-var llmRespBuf = sync.Map{}
-var llmErrBuf = sync.Map{}
+type llmResponse struct {
+	text string
+	err  error
+}
 
 type llmReq struct {
-	uuid        string
 	prompt      string
 	temperature float64
 	model       int
+	reply       chan llmResponse
 }
+
+// llmQueue keeps each model FIFO and alternates models when both have work.
+// All ring operations and the next-model cursor share the same lock.
+type llmQueue struct {
+	mu     sync.Mutex
+	ready  *sync.Cond
+	queues [2]*ring.Ring[llmReq]
+	next   int
+}
+
+func newLLMQueue() *llmQueue {
+	q := &llmQueue{queues: [2]*ring.Ring[llmReq]{
+		ring.NewRing[llmReq](8),
+		ring.NewRing[llmReq](8),
+	}}
+	q.ready = sync.NewCond(&q.mu)
+	return q
+}
+
+func (q *llmQueue) push(req llmReq) {
+	q.mu.Lock()
+	q.queues[req.model].Push(req)
+	q.ready.Signal()
+	q.mu.Unlock()
+}
+
+func (q *llmQueue) pop() llmReq {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+	for {
+		for offset := range len(q.queues) {
+			model := (q.next + offset) % len(q.queues)
+			queue := q.queues[model]
+			if req, ok := queue.PopFront(); ok {
+				q.next = (model + 1) % len(q.queues)
+				if queue.Len() == 0 {
+					// Ring.PopFront retains its backing slot; release drained prompts.
+					queue.Clear()
+				}
+				return req
+			}
+		}
+		q.ready.Wait()
+	}
+}
+
+var llmRequests = newLLMQueue()
 
 const (
 	LLM_Gemini = iota
@@ -45,48 +88,26 @@ const (
 func init() {
 	go func() {
 		for {
-			for _, llmReqBuf := range llmReqBufs {
-				var reqUUID string
-				var req llmReq
-				if llmReqBuf.Len() > 0 {
-					req = llmReqBuf.Pop().(llmReq)
-					reqUUID = req.uuid
-				}
-				if reqUUID == "" {
-					continue
-				}
-				resp, err := requestLLM(req)
-				if err != nil {
-					llmErrBuf.Store(reqUUID, err)
-				} else {
-					llmRespBuf.Store(reqUUID, resp)
-				}
-			}
+			req := llmRequests.pop()
+			text, err := requestLLM(req)
+			req.reply <- llmResponse{text: text, err: err}
 		}
 	}()
 }
 
 func CallLLM(prompt string, temperature float64, model int) (string, error) {
-	reqUUID := uuid.New().String()
-	req := llmReq{
-		uuid:        reqUUID,
+	if model < 0 || model >= len(llmRequests.queues) {
+		return "", fmt.Errorf("unsupported LLM model: %d", model)
+	}
+	reply := make(chan llmResponse, 1)
+	llmRequests.push(llmReq{
 		prompt:      prompt,
 		temperature: temperature,
 		model:       model,
-	}
-	switch model {
-	case LLM_Gemini:
-		llmGeminiReqBuf.InsertAt(0, req)
-	case LLM_Local:
-		llmLocalReqBuf.InsertAt(0, req)
-	}
-	for {
-		if llmResp, ok := llmRespBuf.LoadAndDelete(reqUUID); ok {
-			return llmResp.(string), nil
-		} else if llmErr, ok := llmErrBuf.LoadAndDelete(reqUUID); ok {
-			return "", llmErr.(error)
-		}
-	}
+		reply:       reply,
+	})
+	result := <-reply
+	return result.text, result.err
 }
 
 func Unmarshal_LLM_JSON_Response[T any](resp string, v *T) error {
@@ -112,7 +133,7 @@ func requestLLM(req llmReq) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		response, err := client.Models.GenerateContent(ctx, "gemini-2.0-flash-lite", genai.Text(req.prompt), &genai.GenerateContentConfig{
+		response, err := client.Models.GenerateContent(ctx, "gemini-3.5-flash-lite", genai.Text(req.prompt), &genai.GenerateContentConfig{
 			Temperature:           genai.Ptr(float32(req.temperature)),
 			AutomaticContinuation: genai.Ptr(false),
 		})

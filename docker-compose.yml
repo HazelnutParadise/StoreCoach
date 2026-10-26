@@ -26,3 +26,4 @@ networks:
     external: false
   ollama-net:
     external: true
+    name: infra-net
