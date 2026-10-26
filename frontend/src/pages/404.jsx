@@ -1,5 +1,5 @@
-import { use, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link } from "react-router";
 
 const PageNotFound = (props) => {
   const { setPageTitle } = props;

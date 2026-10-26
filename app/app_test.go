@@ -25,7 +25,7 @@ func Test_splitIntoChunks(t *testing.T) {
 }
 
 func Test_generateAttributesFromReviews(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	storeName := "好旺來餐廳"
 	reviews := []string{
 		"這家店的餐點很好吃，價格也很實惠。",
@@ -48,7 +48,7 @@ func Test_generateAttributesFromReviews(t *testing.T) {
 }
 
 func TestReviewMining(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	storeName := "好旺來餐廳"
 	reviews := []string{
 		"這家店的餐點很好吃，價格也很實惠。",

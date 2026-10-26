@@ -24,11 +24,10 @@ var AssetsDir embed.FS
 const DevMode = false
 
 func init() {
-	err := godotenv.Load("StoreCoach.env")
-	if err != nil {
+	err := godotenv.Load(".env")
+	if err != nil && !os.IsNotExist(err) {
 		log.Println("Error loading .env file")
 	}
-	log.Println(os.Getenv("GEMINI_API_KEY"))
 }
 
 func main() {

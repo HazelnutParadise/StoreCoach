@@ -1,6 +1,9 @@
 services:
   web:
-    image: storecoach
+    build:
+      context: .
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:?必須設定 GEMINI_API_KEY}
     ports:
       - "127.0.0.1:6868:8080"
     restart: unless-stopped

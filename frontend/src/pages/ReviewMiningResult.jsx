@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router";
 import FullScreenLoader from "../components/FullScreenLoader";
 import "./ReviewMiningResult.css";
 import RmAttributesPieChart from "../charts/RmAttributesPieChart";

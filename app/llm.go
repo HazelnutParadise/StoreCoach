@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 	"sync"
@@ -10,8 +11,8 @@ import (
 	"github.com/HazelnutParadise/insyra"
 	"github.com/google/uuid"
 	"github.com/tmc/langchaingo/llms"
-	"github.com/tmc/langchaingo/llms/googleai"
 	"github.com/tmc/langchaingo/llms/ollama"
+	"google.golang.org/genai"
 )
 
 const ollamaServerURL = "http://ollama:11434"
@@ -99,17 +100,38 @@ func requestLLM(req llmReq) (string, error) {
 	case LLM_Gemini:
 		time.Sleep(llmGeminiRequestInterval / 2)
 		ctx := context.Background()
-		llm, err := googleai.New(ctx, googleai.WithAPIKey(
-			os.Getenv("GEMINI_API_KEY")),
-			googleai.WithDefaultModel("gemini-2.0-flash-lite"),
-			googleai.WithDefaultTemperature(req.temperature),
-		)
+		key := os.Getenv("GEMINI_API_KEY")
+		if key == "" {
+			return "", fmt.Errorf("GEMINI_API_KEY is required")
+		}
+		client, err := genai.NewClient(ctx, &genai.ClientConfig{
+			APIKey:  key,
+			Backend: genai.BackendGeminiAPI,
+		})
 		if err != nil {
 			return "", err
 		}
-		completion, err = llms.GenerateFromSinglePrompt(ctx, llm, req.prompt)
+		response, err := client.Models.GenerateContent(ctx, "gemini-2.0-flash-lite", genai.Text(req.prompt), &genai.GenerateContentConfig{
+			Temperature:           genai.Ptr(float32(req.temperature)),
+			AutomaticContinuation: genai.Ptr(false),
+		})
 		if err != nil {
 			return "", err
+		}
+		if response == nil {
+			return "", fmt.Errorf("Gemini returned an empty response")
+		}
+		if feedback := response.PromptFeedback; feedback != nil && feedback.BlockReason != "" && feedback.BlockReason != genai.BlockedReasonUnspecified {
+			return "", fmt.Errorf("Gemini blocked the prompt: %s", feedback.BlockReason)
+		}
+		for _, candidate := range response.Candidates {
+			if candidate != nil && (candidate.FinishReason == genai.FinishReasonSafety || candidate.FinishReason == genai.FinishReasonRecitation) {
+				return "", fmt.Errorf("Gemini blocked the response: %s", candidate.FinishReason)
+			}
+		}
+		completion = response.Text()
+		if completion == "" {
+			return "", fmt.Errorf("Gemini returned no text")
 		}
 		time.Sleep(llmGeminiRequestInterval / 2)
 	case LLM_Local:

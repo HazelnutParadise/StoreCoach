@@ -296,8 +296,8 @@ func simpleLinearRegressEachAttributeScoreAndRatings(attributes []string, review
 		if scores.Len() < 2 || ratings.Len() < 2 {
 			continue // 略過這組數據
 		}
-		result := stats.LinearRegression(scores, ratings)
-		if result == nil {
+		result, err := stats.LinearRegression(scores, ratings)
+		if err != nil || result == nil {
 			continue // 如果線性迴歸失敗，跳過這個屬性
 		}
 		attributeRegressResultsMap[attribute] = ReviewMiningAttributeSimpleLinearRegressResult{
@@ -373,16 +373,16 @@ func reviewsAttributeTTest(attributes []string, miningResults []SingleReviewMini
 		if group0.Len() < 2 || group1.Len() < 2 {
 			continue // 略過這組數據
 		}
-		ftest := stats.FTestForVarianceEquality(group0, group1)
-		if ftest != nil {
+		ftest, err := stats.FTestForVarianceEquality(group0, group1)
+		if err == nil && ftest != nil {
 			if ftest.PValue <= 0.05 {
 				varEqual = false
 			} else {
 				varEqual = true
 			}
 		}
-		result := stats.TwoSampleTTest(group0, group1, varEqual, 0.95)
-		if result == nil {
+		result, err := stats.TwoSampleTTest(group0, group1, varEqual, 0.95)
+		if err != nil || result == nil {
 			continue
 		}
 		if math.IsNaN(result.Statistic) || math.IsNaN(result.PValue) {

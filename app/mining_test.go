@@ -7,7 +7,7 @@ import (
 )
 
 func TestAnalyzeReview(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	// 測試單個評論分析
 	storeName := "星巴克"
 	productName := "咖啡"
@@ -31,7 +31,7 @@ func TestAnalyzeReview(t *testing.T) {
 }
 
 func TestGenerateAttributesFromReviews(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	// 測試屬性生成
 	storeName := "麥當勞"
 	productName := "漢堡"
@@ -56,7 +56,7 @@ func TestGenerateAttributesFromReviews(t *testing.T) {
 }
 
 func TestReviewMiningComplete(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	// 測試完整的評論挖掘流程
 	storeName := "台積電餐廳"
 	productName := ""
@@ -108,7 +108,7 @@ func TestReviewMiningComplete(t *testing.T) {
 }
 
 func TestLLMAttributeConsistency(t *testing.T) {
-	godotenv.Load("../StoreCoach.env")
+	godotenv.Load("../.env")
 	// 測試 LLM 返回的屬性一致性
 	storeName := "手搖飲料店"
 	productName := "珍珠奶茶"
