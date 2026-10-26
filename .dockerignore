@@ -6,3 +6,4 @@
 **/node_modules
 frontend/dist
 *.tar
+.DS_Store
