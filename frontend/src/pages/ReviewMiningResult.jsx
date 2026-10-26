@@ -111,10 +111,6 @@ const ReviewMiningResult = ({ setPageTitle }) => {
   };
 
   if (result) {
-    if (!rmAttributes) {
-      alert("探勘失敗，可能是評論資料中沒有內容");
-      navigate("/");
-    }
     rmAttributes.forEach((element) => {
       attributeCount[element] = 0;
     });
@@ -172,6 +168,22 @@ const ReviewMiningResult = ({ setPageTitle }) => {
 
             if (!resJson.storeName) {
               throw new Error("No data returned from the server");
+            }
+
+            if (
+              !Array.isArray(resJson.attributes) ||
+              !Array.isArray(resJson.results) ||
+              !resJson.results.every(
+                (review) =>
+                  review !== null &&
+                  typeof review === "object" &&
+                  Array.isArray(review.miningResults) &&
+                  review.miningResults.every(
+                    (item) => item !== null && typeof item === "object"
+                  )
+              )
+            ) {
+              throw new Error("Invalid review mining response");
             }
 
             if (isMounted) {

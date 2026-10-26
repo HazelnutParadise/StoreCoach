@@ -72,6 +72,7 @@ func CallLLM(prompt string, temperature float64, model int) (string, error) {
 		uuid:        reqUUID,
 		prompt:      prompt,
 		temperature: temperature,
+		model:       model,
 	}
 	switch model {
 	case LLM_Gemini:

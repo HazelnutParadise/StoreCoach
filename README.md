@@ -10,6 +10,8 @@ Go 後端在根目錄使用 `go.mod` 與 `go.sum` 管理依賴。Bun 前端在 `
 
 更新直接與間接依賴時，Bun 的間接依賴仍須符合上游套件宣告的版本範圍。跨越該範圍前必須確認相容性，並重新執行檢查、建置與瀏覽器驗證。
 
+`go.mod` 保留 MongoDB v1 的間接版本要求，將上游依賴圖固定在已修補的版本。應用程式的資料庫程式使用 v2 SDK。執行 `go mod tidy` 或更新依賴後，需確認依賴圖中的 v1 版本仍不低於 `v1.17.7`。
+
 ## 開發環境
 
 使用 Bun 1.4.4 與 Go 1.27.3。前端的安裝、開發伺服器與打包都由 Bun 執行，不需要另外安裝 Node.js。
@@ -34,10 +36,10 @@ go vet ./...
 go test ./...
 ```
 
-現有評論探勘整合測試會讀取根目錄 `.env` 並呼叫真實 Gemini API，需要有效金鑰及可用模型，也可能產生 API 費用。不呼叫外部服務的升級回歸測試可執行：
+現有評論探勘整合測試需要可連線的 Ollama 服務與 `gemma3:12b` 模型，以及根目錄 `.env` 的有效 Gemini 金鑰。Gemini 呼叫可能產生 API 費用。不呼叫外部服務的升級回歸測試可執行：
 
 ```sh
-go test ./... -run '^TestGemini|^TestStatsDependencyUpgrade$|^Test_splitIntoChunks$'
+go test ./... -run '^TestCallLLM|^TestGemini|^TestStatsDependencyUpgrade$|^Test_splitIntoChunks$'
 ```
 
 ## Docker Compose
