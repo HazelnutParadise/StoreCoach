@@ -11,7 +11,7 @@ services:
       - ollama-net
       - storecoach-net
   mongo:
-    image: mongodb/mongodb-community-server:9.0.4-ubuntu2204
+    image: mongodb/mongodb-community-server:9.0.4-ubi9-slim
     # ports:
     #   - "6867:27017"
     volumes:
