@@ -63,7 +63,7 @@ func TestCallLLMGeminiRouting(t *testing.T) {
 	var geminiRequests, ollamaRequests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		geminiRequests.Add(1)
-		if !strings.Contains(r.URL.Path, "gemini-2.0-flash-lite:generateContent") {
+		if !strings.Contains(r.URL.Path, "gemini-3.5-flash-lite:generateContent") {
 			t.Errorf("unexpected model endpoint: %s", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")

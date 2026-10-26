@@ -22,6 +22,7 @@ func TestGeminiRequest(t *testing.T) {
 		{"blocked prompt", `{"promptFeedback":{"blockReason":"SAFETY"}}`, "", 200, true},
 		{"blocked output", `{"candidates":[{"content":{"parts":[{"text":"partial"}]},"finishReason":"SAFETY"}]}`, "", 200, true},
 		{"empty", `{}`, "", 200, true},
+		{"retired model", `{"error":{"code":404,"message":"This model is no longer available","status":"NOT_FOUND"}}`, "", 404, true},
 		{"upstream error", `{"error":{"code":503,"message":"unavailable","status":"UNAVAILABLE"}}`, "", 503, true},
 	}
 	for _, tc := range cases {
@@ -29,7 +30,7 @@ func TestGeminiRequest(t *testing.T) {
 			calls := 0
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				calls++
-				if !strings.Contains(r.URL.Path, "gemini-2.0-flash-lite:generateContent") {
+				if !strings.Contains(r.URL.Path, "gemini-3.5-flash-lite:generateContent") {
 					t.Errorf("model path: %s", r.URL.Path)
 				}
 				if r.Header.Get("x-goog-api-key") != "test-key" {
